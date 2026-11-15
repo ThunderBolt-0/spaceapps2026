@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
+  <title>The Red Frontier</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #120d0b; color: #f3eee9;
+                 font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    #unity-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; background: #120d0b; outline: none; }
+    #loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+              background: radial-gradient(ellipse at 50% 125%, #8a4a2a 0%, #2a1712 55%, #120d0b 100%); text-align: center; padding: 16px; }
+    #loader .over { margin: 0; letter-spacing: .32em; color: #ee8540; font-weight: 700; font-size: 12px; }
+    #loader h1 { margin: 0; font-size: clamp(30px, 6vw, 56px); font-weight: 700; }
+    #loader .sub { margin: 0; opacity: .7; font-size: 15px; max-width: 520px; }
+    #bar { width: min(420px, 70vw); height: 6px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; }
+    #fill { width: 0; height: 100%; background: #ee8540; border-radius: 3px; transition: width .2s; }
+    #msg { margin: 0; opacity: .6; font-size: 13px; }
+    #warn { position: fixed; left: 50%; top: 16px; transform: translateX(-50%); background: #5a1d1d; padding: 10px 16px;
+            border-radius: 10px; display: none; font-size: 14px; z-index: 10; }
+  </style>
+</head>
+<body>
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+  <div id="loader">
+    <p class="over">MISSION TRAINER</p>
+    <h1>The Red Frontier</h1>
+    <p class="sub">Train to live on Mars. Best with a keyboard and mouse.</p>
+    <div id="bar"><div id="fill"></div></div>
+    <p id="msg">Loading Mars…</p>
+  </div>
+  <div id="warn"></div>
+  <script>
+    var canvas = document.querySelector("#unity-canvas");
+    function showBanner(msg, type) {
+      var w = document.querySelector("#warn");
+      w.style.display = "block";
+      w.textContent = msg;
+      if (type !== "error") setTimeout(function () { w.style.display = "none"; }, 5000);
+    }
+    var buildUrl = "Build";
+    var config = {
+      arguments: [],
+      dataUrl: buildUrl + "/WebGL.data.unityweb",
+      frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
+      codeUrl: buildUrl + "/WebGL.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "DefaultCompany",
+      productName: "The Red Frontier",
+      productVersion: "0.1.0",
+      showBanner: showBanner,
+      // Cap the resolution on high-DPI screens so the game stays smooth in the browser.
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+    };
+    var script = document.createElement("script");
+    script.src = buildUrl + "/WebGL.loader.js";
+    script.onload = function () {
+      createUnityInstance(canvas, config, function (p) {
+        document.querySelector("#fill").style.width = (100 * p) + "%";
+      }).then(function () {
+        document.querySelector("#loader").remove();
+        canvas.focus();
+      }).catch(function (m) {
+        document.querySelector("#msg").textContent = "Sorry, Mars could not load: " + m;
+      });
+    };
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>

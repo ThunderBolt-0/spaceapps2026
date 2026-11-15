@@ -34,11 +34,15 @@ namespace MissionTrainer.EditorTools
             PlayerSettings.defaultWebScreenHeight = 720;
             PlayerSettings.runInBackground = true;
             if (Directory.Exists("Assets/WebGLTemplates/MarsFit")) PlayerSettings.WebGL.template = "PROJECT:MarsFit";   // fills the window
-            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
-            PlayerSettings.WebGL.decompressionFallback = true;   // works even if the server doesn't send gzip headers
+            // Brotli: about 15-20% smaller than Gzip (keeps every file under Cloudflare Pages' 25 MiB limit).
+            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
+            PlayerSettings.WebGL.decompressionFallback = true;   // works even if the server doesn't send compression headers
             PlayerSettings.WebGL.dataCaching = true;
             PlayerSettings.WebGL.nameFilesAsHashes = false;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
+            // Keep every file under Cloudflare Pages' 25 MiB limit: textures at most 1024 px in the web build
+            // (2048 terrain/rock textures are 4x bigger and barely shrink with gzip). The editor keeps full size.
+            CapWebTextures(1024);
 
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
@@ -70,6 +74,33 @@ namespace MissionTrainer.EditorTools
             Debug.Log("WebGL build finished:\n" + sb);
 
             if (Application.isBatchMode) EditorApplication.Exit(s.result == BuildResult.Succeeded ? 0 : 1);
+        }
+
+        /// <summary>
+        /// WebGL-only texture settings for every texture in the game: at most 'max' pixels and Crunch compression
+        /// (much smaller downloads). Saved in the .meta files; the editor and other platforms keep full quality.
+        /// </summary>
+        static void CapWebTextures(int max)
+        {
+            int changed = 0;
+            foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/_Game" }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!(AssetImporter.GetAtPath(path) is TextureImporter ti)) continue;
+                var ps = ti.GetPlatformTextureSettings("WebGL");
+                int size = Mathf.Min(max, ti.maxTextureSize);
+                if (ps.overridden && ps.maxTextureSize == size && ps.crunchedCompression) continue;
+                ps.overridden = true;
+                ps.maxTextureSize = size;
+                ps.format = TextureImporterFormat.Automatic;
+                ps.textureCompression = TextureImporterCompression.Compressed;
+                ps.crunchedCompression = true;
+                ps.compressionQuality = 60;
+                ti.SetPlatformTextureSettings(ps);
+                ti.SaveAndReimport();
+                changed++;
+            }
+            if (changed > 0) Debug.Log($"WebGL textures: capped {changed} textures at {max} px with Crunch compression.");
         }
 
         const string WebDir = "web";
