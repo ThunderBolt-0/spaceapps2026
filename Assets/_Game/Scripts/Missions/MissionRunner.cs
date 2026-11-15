@@ -580,7 +580,10 @@ namespace MissionTrainer
         }
 
         /// <summary>Pick up a rock sample in the world. Costs oxygen (no choice is free).</summary>
-        public bool TryCollectSample(bool quickTrip = false)
+        public bool TryCollectSample(bool quickTrip = false) => TryCollectSample(quickTrip, null);
+
+        /// <summary>Pick up a rock sample; siteRock = the rock that site was showing (null = roll one).</summary>
+        public bool TryCollectSample(bool quickTrip, RockInfo siteRock)
         {
             if (IsOver || ActiveCard != null || State == null || (!quickTrip && !State.outside)) return false;
             var b = cfg.balance;
@@ -589,7 +592,8 @@ namespace MissionTrainer
             State.daySamples++;
             State.research += HabitatState.ResearchPerSample;
             // Which rock is it? A rarity roll from real Mars finds (the rock collection on the home screen)
-            var rock = RockCollection.Roll(out bool isNew);
+            var rock = siteRock ?? RockCollection.Pick();
+            bool isNew = RockCollection.Add(rock);
             if (rock != null)
             {
                 int bonus = RockCollection.ResearchBonus[RockCollection.RarityIndex(rock.rarity)];

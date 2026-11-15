@@ -439,8 +439,8 @@
                       "arg":  null,
                       "count":  0,
                       "text":  "Go out through the airlock",
-                      "why":  "Walk into the tunnel. The doors open as you get close.",
-                      "hab":  "HAB: In the airlock, one door closes behind you, the pumps move the air, then the next door opens. Outside, your air drops every second!",
+                      "why":  "Click each round door in the tunnel to open it.",
+                      "hab":  "HAB: The airlock has two heavy round doors, like a bank vault. Click a door to open it. Outside, your air drops every second!",
                       "red":  false
                   },
                   {

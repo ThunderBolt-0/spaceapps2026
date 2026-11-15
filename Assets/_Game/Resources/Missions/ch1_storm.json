@@ -337,7 +337,7 @@
                       "arg":  null,
                       "count":  0,
                       "text":  "Go out through the airlock",
-                      "why":  "Walk into the tunnel. Your air drops every second outside.",
+                      "why":  "Click the round doors to open them. Your air drops every second outside.",
                       "hab":  "HAB: Out you go. Watch your air!",
                       "red":  false
                   },

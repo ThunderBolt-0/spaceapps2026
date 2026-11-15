@@ -178,7 +178,7 @@ namespace MissionTrainer
             var tilesRow = Rect("Tiles", col);
             HList(tilesRow, 12, 0);
             LE(tilesRow, prefH: 170);
-            BigTile(tilesRow, "play", "Play", Accent, () => flow.ContinueExpedition(), out continueHead, out continueSub, 1.4f);
+            BigTile(tilesRow, "play", "Story Mode", Accent, () => flow.ContinueExpedition(), out continueHead, out continueSub, 1.4f);
             BigTile(tilesRow, "globe", "Free play", Quiet, () => flow.ShowFreeplayHub(), out _, out freeplaySub, 1f);
             BigTile(tilesRow, "suit", "My suit", Quiet, () => flow.ShowSuit(false), out _, out suitSub, 1f);
 
@@ -269,7 +269,7 @@ namespace MissionTrainer
 
             int done = MissionLoader.CompletedStages();
             var next = MissionLoader.NextStage();
-            continueHead.text = next == null && SaveSystem.SeenIntro ? "The end!" : done == 0 ? "Play" : "Keep playing";
+            continueHead.text = "Story Mode";
             continueSub.text = !SaveSystem.SeenIntro ? "Start here!" : next == null ? "Watch the crew land" : $"Next: {next.title}";
 
             mapSub.text = $"{done} of {MissionLoader.Chapters.Length} done";

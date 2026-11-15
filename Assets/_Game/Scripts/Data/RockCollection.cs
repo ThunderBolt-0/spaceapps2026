@@ -45,21 +45,37 @@ namespace MissionTrainer
         public static bool Has(string id) => Count(id) > 0;
         public static int UniqueFound => All.Count(r => Has(r.id));
 
-        /// <summary>Roll a rock for one collected sample, add it to the collection. isNew = first time ever.</summary>
-        public static RockInfo Roll(out bool isNew)
+        /// <summary>Roll a rarity, then a real rock of that rarity (not saved: rock sites pick theirs when they appear).</summary>
+        public static RockInfo Pick()
         {
-            isNew = false;
             if (All.Length == 0) return null;
             int total = Weights.Sum(), pick = UnityEngine.Random.Range(0, total), tier = 0;
             for (; tier < Weights.Length; tier++) { if (pick < Weights[tier]) break; pick -= Weights[tier]; }
             tier = Mathf.Min(tier, Rarities.Length - 1);
             var pool = All.Where(r => RarityIndex(r.rarity) == tier).ToArray();
             if (pool.Length == 0) pool = All;
-            var rock = pool[UnityEngine.Random.Range(0, pool.Length)];
-            isNew = !Has(rock.id);
+            return pool[UnityEngine.Random.Range(0, pool.Length)];
+        }
+
+        /// <summary>Add a collected rock to the collection. Returns true the first time ever.</summary>
+        public static bool Add(RockInfo rock)
+        {
+            if (rock == null) return false;
+            bool isNew = !Has(rock.id);
             PlayerPrefs.SetInt("rock_" + rock.id, Count(rock.id) + 1);
             PlayerPrefs.Save();
+            return isNew;
+        }
+
+        /// <summary>Pick and add in one go.</summary>
+        public static RockInfo Roll(out bool isNew)
+        {
+            var rock = Pick();
+            isNew = Add(rock);
             return rock;
         }
+
+        /// <summary>Meteorites are shiny metal; everything else is stone.</summary>
+        public static bool IsMetal(RockInfo r) => r != null && (r.id == "heatshield" || r.id == "blockisland");
     }
 }

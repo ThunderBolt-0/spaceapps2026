@@ -412,44 +412,42 @@ namespace MissionTrainer.EditorTools
             log.AppendLine("Habitat: new ribs, footing, sandbag berm, airlock ribs, wall panels, ceiling hub and lockers.");
         }
 
-        // ───────── airlock: two pressure doors in the tunnel ─────────
+        // ───────── airlock: two heavy round vault doors in the tunnel ─────────
 
         const float TunnelAxisY = 1.3f, TunnelR = 1.45f;
-        const float DoorHalfW = 0.58f, DoorBottom = -1.3f, DoorTopLocal = 0.78f;   // relative to the tunnel axis
+        const float DoorR = 1.05f, DoorCenterY = -0.25f;   // round opening (relative to the tunnel axis): floor to 2.1 m
 
-        /// <summary>A round wall that fills the tunnel, with a door-shaped hole. Both faces, so it looks right from each side.</summary>
+        /// <summary>A round wall that fills the tunnel, with a round door hole. Both faces, so it looks right from each side.</summary>
         static Mesh BulkheadMesh()
         {
             const int n = 72;
+            var c = new Vector2(0, DoorCenterY);
             var verts = new System.Collections.Generic.List<Vector3>();
             var norms = new System.Collections.Generic.List<Vector3>();
             var uvs = new System.Collections.Generic.List<Vector2>();
             var tris = new System.Collections.Generic.List<int>();
             for (int side = 0; side < 2; side++)
             {
-                float z = side == 0 ? -0.04f : 0.04f;
+                float z = side == 0 ? -0.06f : 0.06f;
                 var nrm = side == 0 ? Vector3.back : Vector3.forward;
                 int start = verts.Count;
                 for (int i = 0; i <= n; i++)
                 {
                     float a = i / (float)n * Mathf.PI * 2;
-                    var dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
-                    // where this ray leaves the door rectangle
-                    float tx = Mathf.Abs(dir.x) > 1e-4f ? DoorHalfW / Mathf.Abs(dir.x) : float.MaxValue;
-                    float ty = dir.y > 1e-4f ? DoorTopLocal / dir.y : dir.y < -1e-4f ? DoorBottom / dir.y : float.MaxValue;
-                    float t = Mathf.Min(tx, ty);
-                    var inner = dir * t;
-                    var outer = dir * TunnelR;
-                    if (inner.magnitude > TunnelR) inner = outer;
+                    var d = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
+                    var inner = c + d * DoorR;
+                    float cd = Vector2.Dot(c, d);
+                    float t = -cd + Mathf.Sqrt(cd * cd - c.sqrMagnitude + TunnelR * TunnelR);   // ray from the door center to the tunnel wall
+                    var outer = c + d * t;
                     verts.Add(new Vector3(inner.x, inner.y, z)); verts.Add(new Vector3(outer.x, outer.y, z));
                     norms.Add(nrm); norms.Add(nrm);
                     uvs.Add(inner * 0.5f); uvs.Add(outer * 0.5f);
                 }
                 for (int i = 0; i < n; i++)
                 {
-                    int a = start + i * 2, b = a + 1, c = a + 2, d = a + 3;
-                    if (side == 0) tris.AddRange(new[] { a, b, c, b, d, c });
-                    else tris.AddRange(new[] { a, c, b, b, c, d });
+                    int a = start + i * 2, b = a + 1, cc = a + 2, d = a + 3;
+                    if (side == 0) tris.AddRange(new[] { a, b, cc, b, d, cc });
+                    else tris.AddRange(new[] { a, cc, b, b, cc, d });
                 }
             }
             var m = new Mesh();
@@ -462,15 +460,15 @@ namespace MissionTrainer.EditorTools
         {
             var hab = GameObject.Find("Habitat");
             var alu = M("MetalLight");
-            var dark = M("MetalDark");
-            var glass = M("SuitVisor") ?? dark;
-            if (!hab || !alu || !dark) { log.AppendLine("Airlock: skipped."); return; }
+            if (!hab || !alu) { log.AppendLine("Airlock: skipped."); return; }
             var old = hab.transform.Find("AirlockDoors");
             if (old) Object.DestroyImmediate(old.gameObject);
             var root = new GameObject("AirlockDoors").transform;
             root.SetParent(hab.transform, false);
+            var steel = Mat("VaultSteel", new Color(0.46f, 0.48f, 0.52f), 0.62f, 0.9f);
+            var dark = Mat("VaultDark", new Color(0.15f, 0.16f, 0.18f), 0.5f, 0.85f);
+            var stripe = Mat("HabTrim", new Color(0.86f, 0.42f, 0.16f), 0.35f, 0f);
             var lampMat = Mat("AirlockLamp", new Color(0.4f, 0.1f, 0.1f), 0.8f, 0f, new Color(1f, 0.15f, 0.1f));
-            var stripeMat = Mat("HabTrim", new Color(0.86f, 0.42f, 0.16f), 0.35f, 0f);
             var bulkMesh = ProcArt.SaveMesh(BulkheadMesh(), "AirlockBulkhead");
 
             Transform Door(string name, float z, out Renderer lamp)
@@ -478,41 +476,85 @@ namespace MissionTrainer.EditorTools
                 var b = new GameObject(name).transform;
                 b.SetParent(root, false);
                 b.localPosition = new Vector3(0, TunnelAxisY, z);
-                var wall = MeshGO(b, "Bulkhead", bulkMesh, alu);
-                wall.AddComponent<MeshCollider>().sharedMesh = bulkMesh;
-                // Frame around the opening
-                float h = DoorTopLocal - DoorBottom;
-                Part(PrimitiveType.Cube, b, "JambL", new Vector3(-DoorHalfW - 0.04f, DoorBottom + h / 2, 0), new Vector3(0.09f, h, 0.16f), dark);
-                Part(PrimitiveType.Cube, b, "JambR", new Vector3(DoorHalfW + 0.04f, DoorBottom + h / 2, 0), new Vector3(0.09f, h, 0.16f), dark);
-                Part(PrimitiveType.Cube, b, "Lintel", new Vector3(0, DoorTopLocal + 0.04f, 0), new Vector3(DoorHalfW * 2 + 0.17f, 0.09f, 0.16f), dark);
-                // Hinge + door leaf (the hinge turns; the leaf has a collider so the door really blocks you)
+                MeshGO(b, "Bulkhead", bulkMesh, alu);
+
+                // Thick round frame: 24 steel blocks around the opening, with bolts on both faces
+                const int seg = 24;
+                for (int i = 0; i < seg; i++)
+                {
+                    float a = (i + 0.5f) / seg * Mathf.PI * 2;
+                    var d = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0);
+                    var blk = Part(PrimitiveType.Cube, b, "Frame", new Vector3(0, DoorCenterY, 0) + d * (DoorR + 0.13f),
+                        new Vector3(0.27f, 2 * Mathf.PI * (DoorR + 0.13f) / seg + 0.02f, 0.42f), steel);
+                    blk.transform.localRotation = Quaternion.Euler(0, 0, a * Mathf.Rad2Deg);
+                    if (i % 2 == 0)
+                        foreach (float s in new[] { -1f, 1f })
+                            Part(PrimitiveType.Cylinder, b, "FrameBolt", new Vector3(0, DoorCenterY, s * 0.22f) + d * (DoorR + 0.16f),
+                                new Vector3(0.07f, 0.03f, 0.07f), dark, new Vector3(90, 0, 0));
+                }
+
+                // Hinge on the left edge; the door center sits DoorR to the right of it
                 var hinge = new GameObject("Hinge").transform;
                 hinge.SetParent(b, false);
-                hinge.localPosition = new Vector3(-DoorHalfW, DoorBottom, 0);
-                var leaf = Part(PrimitiveType.Cube, hinge, "Leaf", new Vector3(DoorHalfW, h / 2, 0), new Vector3(DoorHalfW * 2 - 0.02f, h - 0.02f, 0.07f), alu, default, collider: true);
-                var window = Part(PrimitiveType.Cylinder, hinge, "Window", new Vector3(DoorHalfW, h * 0.72f, 0), new Vector3(0.32f, 0.045f, 0.32f), glass, new Vector3(90, 0, 0));
-                Part(PrimitiveType.Cylinder, hinge, "WindowRing", new Vector3(DoorHalfW, h * 0.72f, 0), new Vector3(0.4f, 0.04f, 0.4f), dark, new Vector3(90, 0, 0));
+                hinge.localPosition = new Vector3(-DoorR, DoorCenterY, 0);
+                var c = new Vector3(DoorR, 0, 0);
+
+                // The vault door: a thick steel disc (solid when closed) with a darker rim
+                var disc = Part(PrimitiveType.Cylinder, hinge, "Door", c, new Vector3(2 * DoorR - 0.06f, 0.15f, 2 * DoorR - 0.06f), steel, new Vector3(90, 0, 0));
+                var box = disc.AddComponent<BoxCollider>();
+                box.size = new Vector3(1f, 2f, 1f);   // cylinder space: a thin square slab, not a giant capsule
+                Part(PrimitiveType.Cylinder, hinge, "Rim", c, new Vector3(2 * DoorR + 0.02f, 0.11f, 2 * DoorR + 0.02f), dark, new Vector3(90, 0, 0));
                 foreach (float s in new[] { -1f, 1f })
                 {
-                    Part(PrimitiveType.Cube, hinge, "Handle", new Vector3(DoorHalfW * 2 - 0.16f, h * 0.48f, s * 0.07f), new Vector3(0.05f, 0.3f, 0.05f), dark);
-                    Part(PrimitiveType.Cube, hinge, "Stripe", new Vector3(DoorHalfW, 0.25f, s * 0.04f), new Vector3(DoorHalfW * 2 - 0.1f, 0.08f, 0.005f), stripeMat);
+                    float fz = s * 0.17f;
+                    // Ring of bolts
+                    for (int i = 0; i < 16; i++)
+                    {
+                        float a = i / 16f * Mathf.PI * 2;
+                        Part(PrimitiveType.Cylinder, hinge, "Bolt", c + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0) * (DoorR - 0.14f) + new Vector3(0, 0, fz),
+                            new Vector3(0.08f, 0.025f, 0.08f), dark, new Vector3(90, 0, 0));
+                    }
+                    // Four locking bars, like a bank vault
+                    for (int i = 0; i < 4; i++)
+                    {
+                        float a = (45 + i * 90) * Mathf.Deg2Rad;
+                        var bar = Part(PrimitiveType.Cube, hinge, "LockBar", c + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0) * 0.62f + new Vector3(0, 0, fz),
+                            new Vector3(0.42f, 0.1f, 0.06f), dark);
+                        bar.transform.localRotation = Quaternion.Euler(0, 0, 45 + i * 90);
+                    }
+                    // Wheel handle: hub, three spokes and a rim of short segments
+                    Part(PrimitiveType.Cylinder, hinge, "WheelHub", c + new Vector3(0, 0, s * 0.23f), new Vector3(0.22f, 0.07f, 0.22f), dark, new Vector3(90, 0, 0));
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var sp = Part(PrimitiveType.Cube, hinge, "Spoke", c + new Vector3(0, 0, s * 0.26f), new Vector3(0.82f, 0.05f, 0.05f), steel);
+                        sp.transform.localRotation = Quaternion.Euler(0, 0, i * 60);
+                    }
+                    for (int i = 0; i < 12; i++)
+                    {
+                        float a = (i + 0.5f) / 12 * Mathf.PI * 2;
+                        var rs = Part(PrimitiveType.Cube, hinge, "WheelRim", c + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0) * 0.42f + new Vector3(0, 0, s * 0.27f),
+                            new Vector3(0.07f, 0.24f, 0.07f), steel);
+                        rs.transform.localRotation = Quaternion.Euler(0, 0, a * Mathf.Rad2Deg);
+                    }
+                    // Orange safety ring
+                    for (int i = 0; i < 20; i++)
+                    {
+                        float a = (i + 0.5f) / 20 * Mathf.PI * 2;
+                        var st = Part(PrimitiveType.Cube, hinge, "SafetyRing", c + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0) * (DoorR - 0.3f) + new Vector3(0, 0, s * 0.155f),
+                            new Vector3(0.05f, 0.24f, 0.01f), stripe);
+                        st.transform.localRotation = Quaternion.Euler(0, 0, a * Mathf.Rad2Deg);
+                    }
                 }
-                for (int k = 0; k < 2; k++)
-                    Part(PrimitiveType.Cylinder, hinge, "HingePin", new Vector3(0, 0.35f + k * (h - 0.7f), 0), new Vector3(0.06f, 0.12f, 0.06f), dark);
-                // Status light above the door (green = open, amber = pumping, red = closed)
-                lamp = Part(PrimitiveType.Sphere, b, "Lamp", new Vector3(0, DoorTopLocal + 0.28f, 0), new Vector3(0.16f, 0.16f, 0.2f), lampMat).GetComponent<Renderer>();
+                // Two big hinge barrels
+                foreach (float y in new[] { -0.6f, 0.6f })
+                    Part(PrimitiveType.Cylinder, hinge, "HingeBarrel", new Vector3(-0.05f, y, 0), new Vector3(0.16f, 0.22f, 0.16f), dark);
+
+                lamp = Part(PrimitiveType.Sphere, b, "Lamp", new Vector3(0, DoorCenterY + DoorR + 0.32f, 0), new Vector3(0.14f, 0.14f, 0.2f), lampMat).GetComponent<Renderer>();
                 return hinge;
             }
 
             var inner = Door("InnerDoor", 6.75f, out var innerLamp);
             var outer = Door("OuterDoor", 10.3f, out var outerLamp);
-
-            // Pump boxes and pipes in the chamber (where the air goes when the airlock cycles)
-            foreach (float s in new[] { -1f, 1f })
-            {
-                Part(PrimitiveType.Cube, root, "Pump", new Vector3(s * 0.95f, 0.35f, 8.5f), new Vector3(0.3f, 0.5f, 0.7f), dark);
-                Part(PrimitiveType.Cylinder, root, "Pipe", new Vector3(s * 1.0f, 0.75f, 8.5f), new Vector3(0.08f, 1.7f, 0.08f), alu, new Vector3(90, 0, 0));
-            }
 
             var al = root.gameObject.AddComponent<Airlock>();
             al.habitat = hab.transform;
@@ -522,9 +564,10 @@ namespace MissionTrainer.EditorTools
             al.outerLamp = outerLamp;
             al.innerZ = 6.75f;
             al.outerZ = 10.3f;
-            log.AppendLine("Airlock: inner and outer pressure doors with pump cycle.");
+            var di = inner.gameObject.AddComponent<AirlockDoor>(); di.airlock = al; di.inner = true;
+            var dO = outer.gameObject.AddComponent<AirlockDoor>(); dO.airlock = al; dO.inner = false;
+            log.AppendLine("Airlock: two round vault doors (click to open).");
         }
-
         // ───────── weather station (daily mission) ─────────
 
         static readonly Vector3 WeatherPos = new Vector3(-8, 0, 14);
