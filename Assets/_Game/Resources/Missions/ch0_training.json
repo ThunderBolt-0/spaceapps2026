@@ -439,8 +439,8 @@
                       "arg":  null,
                       "count":  0,
                       "text":  "Go out through the airlock",
-                      "why":  "Click each round door in the tunnel to open it.",
-                      "hab":  "HAB: The airlock has two heavy round doors, like a bank vault. Click a door to open it. Outside, your air drops every second!",
+                      "why":  "Walk into the tunnel. The round doors open as you come close.",
+                      "hab":  "HAB: The airlock has two heavy round doors, like a bank vault. Only one opens at a time, so the base keeps its air. Outside, your air drops every second!",
                       "red":  false
                   },
                   {

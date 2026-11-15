@@ -8,7 +8,7 @@ namespace MissionTrainer
         public Airlock airlock;
         public bool inner;
 
-        public string Prompt => !airlock ? null : airlock.IsOpen(inner) ? "Close the airlock door" : "Open the airlock door";
+        public string Prompt => null;   // the doors open by themselves (nothing to click)
 
         public void Interact()
         {
