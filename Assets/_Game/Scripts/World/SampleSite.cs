@@ -93,14 +93,17 @@ namespace MissionTrainer
             if (beams != null)
             {
                 if (beamMats == null) { beamMats = new Material[beams.Length]; for (int i = 0; i < beams.Length; i++) beamMats[i] = beams[i].material; }
-                var rc = RockCollection.RarityColor(Rock.rarity);
+                // Strong, saturated colors so they still read through Mars's dusty air from far away
+                var rc = tier == 0 ? new Color(0.85f, 0.9f, 1f) : RockCollection.RarityColor(Rock.rarity);
+                float max = Mathf.Max(rc.r, Mathf.Max(rc.g, rc.b));
+                var vivid = new Color(rc.r / max, rc.g / max, rc.b / max);
                 foreach (var m in beamMats)
                 {
                     if (!m) continue;
-                    float a = 0.16f + 0.07f * tier;
-                    if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", new Color(rc.r, rc.g, rc.b, a));
+                    float a = Mathf.Min(0.95f, 0.38f + 0.14f * tier);
+                    if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", new Color(vivid.r, vivid.g, vivid.b, a));
                 }
-                foreach (var b in beams) b.transform.localScale = new Vector3(0.35f + 0.08f * tier, b.transform.localScale.y, 1f);
+                foreach (var b in beams) b.transform.localScale = new Vector3(0.7f + 0.2f * tier, b.transform.localScale.y, 1f);
             }
         }
     }
