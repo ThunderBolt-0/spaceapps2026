@@ -20,7 +20,7 @@ namespace MissionTrainer
                 sb.Append('\n');
             }
             var snap = DonkiService.Snapshot;
-            sb.Append($"<size=70%>Solar events: DONKI snapshot from {snap.snapshotDate} (Archived, not live).</size>");
+            sb.Append($"<size=70%>Solar events: DONKI snapshot from {snap.snapshotDate} (Real · Archived).</size>");
             if (body) body.text = sb.ToString();
         }
     }

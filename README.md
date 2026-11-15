@@ -49,7 +49,7 @@ Nobody ever dies in this game. If things go wrong, HAB calls a *safe abort* and 
 
 ## Real NASA data (and honest labels)
 
-Every number in the game is labelled **Real · Live**, **Real · Archived (with date)**, or **Simulated**. Simulated numbers are never shown as real.
+Real NASA numbers in the game carry a badge: **Real · Live** or **Real · Archived (with date)**.
 
 | Data | Used for |
 |---|---|

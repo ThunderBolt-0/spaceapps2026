@@ -28,7 +28,7 @@ namespace MissionTrainer
         {
             new ChapterInfo
             {
-                id = "ch0_training", stage = "Arrival", title = "First Sols", realEvent = "Practice mission",
+                id = "ch0_training", stage = "Arrival", title = "First Sols", realEvent = "Your first sols at Meridiani Base",
                 blurb = "Learn how the base works: power, air, food, the airlock and the rover.",
                 mcMessage = "Welcome to Meridiani Base, Astronaut! The first crew of six will land after your expedition. Before they come, learn how this base keeps a person alive.",
                 lesson = "Know your base",

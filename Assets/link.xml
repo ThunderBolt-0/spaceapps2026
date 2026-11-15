@@ -1,0 +1,5 @@
+<!-- Managed code stripping (WebGL, Medium) must not remove anything from our own game code:
+     mission/data classes are filled by JsonUtility through reflection. Engine and package code is still stripped. -->
+<linker>
+  <assembly fullname="Assembly-CSharp" preserve="all"/>
+</linker>

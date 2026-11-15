@@ -9,7 +9,8 @@ Ships as a Unity WebGL build on itch.io (browser, no download, no account).
 - Kids ages 7–12. Short sentences, icons, plain words. Every science word gets a tap-for-meaning note
   (tau = "how dusty the sky is"; sol = "one Mars day, about 40 minutes longer than ours").
 - No player dies. Failure = "safe abort" + debrief that explains what happened. Never punish curiosity.
-- Honest framing: label every figure as Real (Live or Archived + date) or Simulated.
+- Honest framing: badge every real figure as Real (Live or Archived + date). Player-facing text says only
+  what is real; it never mentions practice, test or simulated data.
 
 ## Story
 A solo astronaut (in a spacesuit) is invited to Mars at an unspecified future time

@@ -10,7 +10,8 @@ namespace MissionTrainer.EditorTools
     /// <summary>
     /// Menu: Mission Trainer > Build WebGL (itch.io).
     /// Builds the Mars scene to Builds/WebGL with settings that work on itch.io and on a plain local server:
-    /// Gzip + decompression fallback (no special server headers needed), data caching, 1280x720.
+    /// Gzip + decompression fallback (no special server headers needed), data caching, 1280x720,
+    /// size-optimized code (OptimizeSize + Medium stripping), textures capped and Crunch-compressed.
     /// Writes a short report to Logs/WebGLBuildReport.txt.
     /// Command line: Unity -batchmode -projectPath . -executeMethod MissionTrainer.EditorTools.WebGLBuild.Build
     /// </summary>
@@ -34,9 +35,18 @@ namespace MissionTrainer.EditorTools
             PlayerSettings.defaultWebScreenHeight = 720;
             PlayerSettings.runInBackground = true;
             if (Directory.Exists("Assets/WebGLTemplates/MarsFit")) PlayerSettings.WebGL.template = "PROJECT:MarsFit";   // fills the window
-            // Brotli: about 15-20% smaller than Gzip (keeps every file under Cloudflare Pages' 25 MiB limit).
-            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
+            // Gzip, not Brotli: itch.io does not send "Content-Encoding" headers for Unity files, so the browser
+            // unpacks them with the JavaScript fallback. JS Brotli is very slow on a big .data file (it froze the
+            // loading bar for many seconds); JS Gzip is several times faster. Files stay well under Cloudflare Pages'
+            // 25 MiB limit now that the NASA model textures are small (NasaModelSetup.SlimModelTextures).
+            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
             PlayerSettings.WebGL.decompressionFallback = true;   // works even if the server doesn't send compression headers
+            // Smaller .wasm = less to download and compile: size-optimized IL2CPP code + Medium managed stripping.
+            // Our own scripts are kept whole by Assets/link.xml (JsonUtility reads their fields by reflection).
+            // If a build ever fails at runtime with a missing type/method, set this back to Minimal.
+            PlayerSettings.SetIl2CppCodeGeneration(UnityEditor.Build.NamedBuildTarget.WebGL, UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize);
+            PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.WebGL, ManagedStrippingLevel.Medium);
+            PlayerSettings.stripEngineCode = true;
             PlayerSettings.WebGL.dataCaching = true;
             // Hashed file names: each build gets new names, so a browser never mixes a cached old .wasm/.data
             // with a new build (that mix crashed startup with "Maximum call stack size exceeded").
@@ -91,7 +101,8 @@ namespace MissionTrainer.EditorTools
                 if (!(AssetImporter.GetAtPath(path) is TextureImporter ti)) continue;
                 var ps = ti.GetPlatformTextureSettings("WebGL");
                 int size = Mathf.Min(max, ti.maxTextureSize);
-                if (ps.overridden && ps.maxTextureSize == size && ps.crunchedCompression) continue;
+                // Already capped at this size or smaller (e.g. the NASA model web textures use 512): keep it.
+                if (ps.overridden && ps.maxTextureSize <= size && ps.crunchedCompression) continue;
                 ps.overridden = true;
                 ps.maxTextureSize = size;
                 ps.format = TextureImporterFormat.Automatic;

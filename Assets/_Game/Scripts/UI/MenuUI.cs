@@ -207,7 +207,7 @@ namespace MissionTrainer
             }
             difficultyInfo = Label(col, "", 14, TextAnchor.UpperLeft, Muted);
 
-            var foot = Label(title.transform, "A pretend mission with real NASA science. Real numbers are marked \"Real NASA data\".", 13, TextAnchor.LowerLeft, Muted);
+            var foot = Label(title.transform, "A Mars mission built on real NASA science. Real numbers are marked \"Real NASA data\".", 13, TextAnchor.LowerLeft, Muted);
             nasaFoot = foot;
             NasaLive.Changed += RefreshNasaFoot;
             Anchor(foot.rectTransform, Vector2.zero, new Vector2(1, 0), new Vector2(70, 8), new Vector2(-24, 44));
@@ -216,7 +216,7 @@ namespace MissionTrainer
         void RefreshNasaFoot()
         {
             if (!nasaFoot) return;
-            nasaFoot.text = "A pretend mission with real NASA science.   <color=#8FD6FF>" + NasaLive.BadgeLine() + "</color>\n<color=#FFFFFF88>" + NasaLive.MarsDateLine() + "</color>";
+            nasaFoot.text = "A Mars mission built on real NASA science.   <color=#8FD6FF>" + NasaLive.BadgeLine() + "</color>\n<color=#FFFFFF88>" + NasaLive.MarsDateLine() + "</color>";
         }
 
         public static string LevelName(string id) => id == "cadet" ? "Easy" : id == "pilot" ? "Medium" : id == "commander" ? "Hard" : id;
@@ -455,7 +455,7 @@ namespace MissionTrainer
                 {
                     Label(card.transform, ch.lesson, 22, TextAnchor.UpperLeft, Ink, FontStyle.Bold);
                     Label(card.transform, ch.lessonDetail, 16);
-                    if (ch.realEvent != "Practice mission") Label(card.transform, "Learned from: " + ch.realEvent, 13, TextAnchor.UpperLeft, new Color(0.56f, 0.84f, 1f, 0.85f));
+                    if (ch.id != "ch0_training") Label(card.transform, "Learned from: " + ch.realEvent, 13, TextAnchor.UpperLeft, new Color(0.56f, 0.84f, 1f, 0.85f));
                     var photo = NasaPhoto(card.transform, ch.id, 150);
                     if (photo) LE(photo, prefW: 520);
                 }
@@ -824,7 +824,7 @@ namespace MissionTrainer
 
         void BuildScience(Transform root)
         {
-            var body = Page(root, "Science", "Science behind the game", "Every number in this game has a label, so you always know where it came from.", out science, 0.8f);
+            var body = Page(root, "Science", "Science behind the game", "Real NASA numbers in this game wear a badge, so you always know where they came from.", out science, 0.8f);
             var scroll = Scroll(body, out var content, 14);
             Fill((RectTransform)scroll.transform);
 
@@ -833,7 +833,6 @@ namespace MissionTrainer
             LE(badges, prefH: 64);
             BadgeCard(badges, "Real · Live", "Fetched from the internet right now.", Good);
             BadgeCard(badges, "Real · Archived", "Real measurements from a past date (the date is shown).", UIKit.Shield);
-            BadgeCard(badges, "Simulated", "Made up by us to fill gaps, based on real science.", new Color(0.7f, 0.7f, 0.75f));
 
             // Live NASA data: ask DONKI about the Sun's storms right now.
             var live = Box("Live", content, new Color(0.36f, 0.80f, 0.52f, 0.10f));
@@ -862,7 +861,7 @@ namespace MissionTrainer
 
             var snap = DonkiService.Snapshot;
             if (snap != null)
-                Label(content, $"If NASA can't be reached, the game shows a DONKI snapshot saved on {snap.snapshotDate} (Real · Archived, not live).", 15, TextAnchor.UpperLeft, Muted);
+                Label(content, $"If NASA can't be reached, the game shows a DONKI snapshot saved on {snap.snapshotDate} (Real · Archived).", 15, TextAnchor.UpperLeft, Muted);
 
             Overline(content, "Words to know");
             var gl = ContentDb.LoadJson<GlossaryList>("Data/glossary");

@@ -41,6 +41,7 @@ namespace MissionTrainer.EditorTools
         public static string Apply()
         {
             PrepareTextures();
+            ResetSlimTextures();
             var log = new StringBuilder();
 
             // ── Rover: Perseverance (real size: about 3 m long)
@@ -51,6 +52,7 @@ namespace MissionTrainer.EditorTools
                 Clear(rover.body);
                 var size = Place(Inst(perse), rover.body, 2.9f, Fit.Length, "Perseverance (NASA model)", out var model);
                 ReplaceMaterial(model, "arm_graphics", Dir + "Perseverance_ArmGraphics_NoLogo.png", Dir + "Perseverance_ArmGraphics_NoLogo.mat");
+                SlimModelTextures(model, "Perseverance");
                 var col = rover.GetComponent<BoxCollider>();
                 if (col) { col.center = new Vector3(0, size.y / 2, 0); col.size = size; }
                 foreach (var l in rover.GetComponentsInChildren<Canvas>(true)) l.transform.localPosition = new Vector3(0, size.y + 0.6f, 0);
@@ -84,6 +86,7 @@ namespace MissionTrainer.EditorTools
                 int suitIdx = System.Array.FindIndex(mats, m => m && m.name.Contains("astnt1_1"));
                 int visorIdx = System.Array.FindIndex(mats, m => m && m.name.Contains("astnt1_2"));
                 ReplaceMaterial(model, "astnt1_1", Dir + "Astronaut_Suit_NoLogo.png", Dir + "Astronaut_Suit_NoLogo.mat");
+                SlimModelTextures(model, "Astronaut");   // keeps material order, so suit/visor indexes stay valid
 
                 suit.modelRenderer = r;
                 suit.modelSuitTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(Dir + "Astronaut_Suit_NoLogo.png");
@@ -788,6 +791,130 @@ namespace MissionTrainer.EditorTools
                 }
                 if (changed) r.sharedMaterials = mats;
             }
+        }
+
+        // ───────── small web textures for the NASA models ─────────
+        // glTFast stores a .glb's embedded textures as raw RGBA inside the model asset. There is no compression
+        // setting for them, so Perseverance alone added ~61 MB (uncompressed) to the WebGL data file and made the
+        // first load very slow. Fix: copy each texture the scene uses into a normal texture file (at most 1024 px,
+        // 512 px + Crunch in the web build), and point copies of the materials at them. The build then no longer
+        // references the raw .glb textures, so they are left out.
+
+        const string SlimDir = Dir + "WebTextures";
+        const int SlimFileMax = 1024, SlimWebMax = 512;
+        static readonly System.Collections.Generic.Dictionary<Texture, Texture2D> slimTex = new System.Collections.Generic.Dictionary<Texture, Texture2D>();
+        static readonly System.Collections.Generic.Dictionary<Material, Material> slimMat = new System.Collections.Generic.Dictionary<Material, Material>();
+
+        static void ResetSlimTextures()
+        {
+            slimTex.Clear();
+            slimMat.Clear();
+            AssetDatabase.DeleteAsset(SlimDir);   // rebuilt from the models each run, so nothing stale is left behind
+            AssetDatabase.CreateFolder(Dir.TrimEnd('/'), "WebTextures");
+        }
+
+        static bool FromGlb(Object o) => o && AssetDatabase.GetAssetPath(o).EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase);
+
+        static string SafeName(string s)
+        {
+            foreach (var c in Path.GetInvalidFileNameChars()) s = s.Replace(c, '_');
+            return s.Replace(' ', '_');
+        }
+
+        static string UniquePath(string baseName, string ext)
+        {
+            string p = $"{SlimDir}/{SafeName(baseName)}{ext}";
+            for (int n = 2; File.Exists(p); n++) p = $"{SlimDir}/{SafeName(baseName)}_{n}{ext}";
+            return p;
+        }
+
+        static void SlimModelTextures(GameObject model, string prefix)
+        {
+            int before = slimTex.Count;
+            foreach (var r in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = r.sharedMaterials;
+                bool changed = false;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    var slim = SlimMaterial(mats[i], prefix);
+                    if (slim != mats[i]) { mats[i] = slim; changed = true; }
+                }
+                if (changed) r.sharedMaterials = mats;
+            }
+            Debug.Log($"NASA models: {prefix} now uses {slimTex.Count - before} small web textures instead of the raw .glb ones.");
+        }
+
+        static Material SlimMaterial(Material m, string prefix)
+        {
+            if (!m) return m;
+            if (slimMat.TryGetValue(m, out var done)) return done;
+            var props = m.GetTexturePropertyNames();
+            bool glbMat = FromGlb(m);
+            if (!glbMat && !props.Any(p => FromGlb(m.GetTexture(p)))) { slimMat[m] = m; return m; }
+
+            var target = m;
+            if (glbMat)
+            {
+                target = new Material(m);
+                AssetDatabase.CreateAsset(target, UniquePath(prefix + "_" + m.name, ".mat"));
+            }
+            foreach (var p in props)
+            {
+                var t = target.GetTexture(p) as Texture2D;
+                if (FromGlb(t)) target.SetTexture(p, SlimTexture(t, prefix));
+            }
+            EditorUtility.SetDirty(target);
+            slimMat[m] = target;
+            return target;
+        }
+
+        static Texture2D SlimTexture(Texture2D src, string prefix)
+        {
+            if (slimTex.TryGetValue(src, out var done)) return done;
+            bool srgb = src.isDataSRGB;
+            float s = Mathf.Min(1f, (float)SlimFileMax / Mathf.Max(src.width, src.height));
+            int w = Mathf.Max(4, Mathf.RoundToInt(src.width * s)), h = Mathf.Max(4, Mathf.RoundToInt(src.height * s));
+
+            // GPU copy (the .glb textures are not readable on the CPU). An sRGB target keeps color textures' values
+            // exactly as stored; linear data (normal / metal-roughness / occlusion maps) is copied unchanged.
+            var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32,
+                srgb ? RenderTextureReadWrite.sRGB : RenderTextureReadWrite.Linear);
+            var prev = RenderTexture.active;
+            Graphics.Blit(src, rt);
+            RenderTexture.active = rt;
+            var copy = new Texture2D(w, h, TextureFormat.RGBA32, false, !srgb);
+            copy.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+            copy.Apply();
+            RenderTexture.active = prev;
+            RenderTexture.ReleaseTemporary(rt);
+
+            string name = string.IsNullOrEmpty(src.name) ? "tex" : src.name;
+            string path = UniquePath(prefix + "_" + name, ".png");
+            File.WriteAllBytes(path, copy.EncodeToPNG());
+            Object.DestroyImmediate(copy);
+            AssetDatabase.ImportAsset(path);
+
+            var ti = (TextureImporter)AssetImporter.GetAtPath(path);
+            ti.textureType = TextureImporterType.Default;   // same raw layout glTFast's shaders read (also for normal maps)
+            ti.sRGBTexture = srgb;
+            ti.mipmapEnabled = true;
+            ti.wrapModeU = src.wrapModeU;
+            ti.wrapModeV = src.wrapModeV;
+            ti.filterMode = src.filterMode;
+            ti.maxTextureSize = SlimFileMax;
+            ti.alphaSource = TextureImporterAlphaSource.FromInput;
+            ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+            {
+                name = "WebGL", overridden = true, maxTextureSize = SlimWebMax,
+                format = TextureImporterFormat.Automatic, textureCompression = TextureImporterCompression.Compressed,
+                crunchedCompression = true, compressionQuality = 50,
+            });
+            ti.SaveAndReimport();
+
+            var result = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+            slimTex[src] = result;
+            return result;
         }
 
         /// <summary>The suit texture must be readable so trim colors can recolor its stripe at runtime.</summary>

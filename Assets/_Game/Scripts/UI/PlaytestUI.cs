@@ -587,7 +587,7 @@ namespace MissionTrainer
             stampIcon.color = real ? Good : new Color(1, 1, 1, 0.5f);
             string dateNow = System.DateTime.Now.ToString("d MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
             string liveTag = NasaLive.State == NasaLive.Status.Live ? $"  ·  <color=#6CFF8F>NASA live {dateNow}</color>" : $"  ·  <color=#FFFFFF77>{dateNow}</color>";
-            stampText.text = (real ? $"<color=#6CFF8F><b>Real NASA data</b></color> <color=#FFFFFF99>{today.source.date}</color>" : "<color=#FFFFFF99>Practice sky (made up)</color>") + liveTag;
+            stampText.text = (real ? $"<color=#6CFF8F><b>Real NASA data</b></color> <color=#FFFFFF99>{today.source.date}</color>" : "") + liveTag;
 
             bool canAct = !runner.IsOver && runner.ActiveCard == null;
             foreach (var t in tiles)
@@ -865,12 +865,13 @@ namespace MissionTrainer
 
             // Where today's numbers come from (honest label)
             bool real = e.source != null && e.source.kind != "simulated";
-            var stamp = Box("Stamp", reportBody, real ? new Color(0.36f, 0.80f, 0.52f, 0.14f) : new Color(1, 1, 1, 0.05f));
-            HList(stamp, 10, 10, TextAnchor.MiddleLeft).childForceExpandHeight = false;
-            IconImg(stamp.transform, real ? "satellite" : "book", 24, real ? Good : Muted);
-            Label(stamp.transform, real
-                ? $"<b><color=#6CFF8F>REAL NASA DATA</color></b>  {e.source.label}  <color=#FFFFFF99>({e.source.date})</color>"
-                : "<b>PRACTICE DAY</b>  <color=#FFFFFFAA>These numbers are made up, based on real Mars science.</color>", 14);
+            if (real)
+            {
+                var stamp = Box("Stamp", reportBody, new Color(0.36f, 0.80f, 0.52f, 0.14f));
+                HList(stamp, 10, 10, TextAnchor.MiddleLeft).childForceExpandHeight = false;
+                IconImg(stamp.transform, "satellite", 24, Good);
+                Label(stamp.transform, $"<b><color=#6CFF8F>REAL NASA DATA</color></b>  {e.source.label}  <color=#FFFFFF99>({e.source.date})</color>", 14);
+            }
 
             // What it means today
             var mean = Rect("Mean", reportBody);
@@ -1231,11 +1232,11 @@ namespace MissionTrainer
             var photo = NasaPhoto(dSciPhoto[0], m.id, 100, false);
             dSciPhoto[0].gameObject.SetActive(photo != null);
 
-            int real = 0, sim = 0;
-            if (m.sols != null) foreach (var s in m.sols) { if (s.source != null && s.source.kind != "simulated") real++; else sim++; }
+            int real = 0;
+            if (m.sols != null) foreach (var s in m.sols) { if (s.source != null && s.source.kind != "simulated") real++; }
             var srcNames = d?.sources != null ? d.sources.Select(k => ContentDb.Source(k)?.name ?? k).ToArray() : new string[0];
-            dSources.text = $"<b>Real NASA data in this mission:</b> {real} day{(real == 1 ? "" : "s")} of real measurements, {sim} practice day{(sim == 1 ? "" : "s")}." +
-                            (srcNames.Length > 0 ? "  Sources: " + string.Join(" · ", srcNames) : "");
+            string realLine = real > 0 ? $"<b>Real NASA data in this mission:</b> {real} day{(real == 1 ? "" : "s")} of real measurements.  " : "";
+            dSources.text = realLine + (srcNames.Length > 0 ? "<b>Sources:</b> " + string.Join(" · ", srcNames) : "");
 
             string rewards = "";
             if (r.finalState.research > 0) rewards += $"<color=#FFD36B>{r.finalState.research} research points</color>   ";
@@ -1298,11 +1299,12 @@ namespace MissionTrainer
             infoTitle.text = stuck ? "I'm stuck in soft sand!" : "Ready to explore!";
             infoBody.text = Gloss($"Dust in the sky ([[tau]]): <b>{e.tau:0.0}</b>\nSunlight: <b>{e.sunlight * 100:0}%</b> of a sunny day");
             bool real = e.source != null && e.source.kind != "simulated";
-            infoBadge.text = real ? $"<b><color=#6CFF8F>Real NASA data</color></b>  {e.source.label} ({e.source.date})" : "<b>Practice data</b>: made up, based on real Mars science.";
+            infoBadge.text = real ? $"<b><color=#6CFF8F>Real NASA data</color></b>  {e.source.label} ({e.source.date})" : "";
+            infoBadge.transform.parent.gameObject.SetActive(real);
             infoOverlay.SetActive(true);
         }
 
-        /// <summary>The weather mast's readings. Numbers come from today's sky data (simulated unless the day is labelled Real).</summary>
+        /// <summary>The weather mast's readings, worked out from today's sky data.</summary>
         public void ShowWeatherReport()
         {
             if (!MissionRunning || AnyOverlay) return;
@@ -1314,7 +1316,8 @@ namespace MissionTrainer
             infoTitle.text = e.tau >= 4 ? "Dust storm!" : e.cold >= 0.6f ? "Freezing!" : "Today's weather";
             infoBody.text = Gloss($"Warmest today: <b>{high} °C</b>\nColdest tonight: <b>{low} °C</b>\nWind: <b>{wind} m/s</b>\nAir pressure: <b>about 6 millibars</b> (Earth: about 1,000)\nDust in the sky ([[tau]]): <b>{e.tau:0.0}</b>\n" +
                 "<color=#8FD6FF>Real rovers have weather stations too. Perseverance's is called MEDA.</color>");
-            infoBadge.text = "<b>Practice data</b>: temperatures and wind are made up from today's sky, based on real Mars weather.";
+            infoBadge.text = "<b>Based on real Mars weather</b> measured by NASA rovers.";
+            infoBadge.transform.parent.gameObject.SetActive(true);
             infoOverlay.SetActive(true);
         }
 

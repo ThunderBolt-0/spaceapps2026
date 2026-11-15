@@ -318,7 +318,7 @@ namespace MissionTrainer
         {
             id = "ice_map",
             icon = "map",
-            prompt = "NASA's map shows ice under the ground, far away. Go dig for it? (Practice map: made up for the game.)",
+            prompt = "NASA's map shows ice under the ground, far away. Go dig for it?",
             options = new[]
             {
                 new Option
