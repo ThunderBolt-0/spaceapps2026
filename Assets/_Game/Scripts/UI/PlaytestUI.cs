@@ -649,7 +649,7 @@ namespace MissionTrainer
             row.text = Label(col, "", 15, TextAnchor.MiddleLeft, Ink, FontStyle.Bold);
             row.why = Label(col, j.why, 12, TextAnchor.MiddleLeft, Muted);
             // No teleport buttons ("Go", "Go now"): you walk there yourself, and every second outside costs air.
-            bool teleport = j.action != null && (j.action.StartsWith("go:") || j.action == "shelter" || j.action == "inside");
+            bool teleport = j.action != null && (j.action.StartsWith("go:") || j.action == "inside");
             if (!string.IsNullOrEmpty(j.action) && !teleport)
             {
                 row.action = Btn(row.bg.transform, j.actionLabel ?? "Do it", 14, Accent, 0, () => DoAction(j));
@@ -706,12 +706,11 @@ namespace MissionTrainer
                 if (left > 0 || s.outside) endDayBg.color = s.outside ? new Color(0.25f, 0.25f, 0.3f, 0.9f) : new Color(0.55f, 0.32f, 0.18f, 0.95f);
             }
 
-            // Arrow in the world: first open job (Easy level, and always in story steps), or the shelter / ice trip (any level).
+            // Arrow in the world: first open job (Easy level, and always in story steps), or the ice trip (any level).
             var next = jobRows.FirstOrDefault(r => !Done(r.job, s) && !Locked(r.job, s) && !string.IsNullOrEmpty(r.job.target));
             string target = next?.job.target;
-            bool always = target == "shelter" || target == "ice";
-            if (!always && !StepMode && s.iceAccepted && !s.iceDrilled && s.outside) target = "ice";
-            markerTarget = runner.Level.hintsOn || StepMode || target == "shelter" || target == "ice" ? target : null;
+            if (target != "ice" && !StepMode && s.iceAccepted && !s.iceDrilled && s.outside) target = "ice";
+            markerTarget = runner.Level.hintsOn || StepMode || target == "ice" ? target : null;
         }
 
         bool AllJobsDone() => StepMode ? runner.CantSleepReason() == null : !ShowJobs || (!runner.State.outside && jobRows.All(r => r.job.optional || Done(r.job, runner.State)));
@@ -732,14 +731,6 @@ namespace MissionTrainer
                 case "go:solar": GoOutsideTo("solar", "Click the panels to clean them."); break;
                 case "go:rover": GoOutsideTo("rover", "Click the rover and stay close while it's fixed."); break;
                 case "go:weather": GoOutsideTo("weather", "Click the weather station to read it."); break;
-                case "shelter":
-                    if (fpc && playerLocation)
-                    {
-                        var b = playerLocation.shelter;
-                        fpc.TeleportTo(new Vector3(b.center.x, b.min.y + 0.05f, b.center.z), Vector3.zero);
-                    }
-                    runner.SetLocation(false, true);
-                    break;
                 case "inside":
                     GoInside();
                     break;
@@ -868,7 +859,7 @@ namespace MissionTrainer
 
         static string HazardIcon(string name) => name switch
         {
-            "Dust storm" => "dust", "Cold night" => "snow", "Solar storm" => "shield", "Soft sand" => "rover", "No contact" => "radio", _ => "sun",
+            "Dust storm" => "dust", "Cold night" => "snow", "Soft sand" => "rover", "No contact" => "radio", _ => "sun",
         };
 
         /// <summary>Before a mission: what it's about (real event + real NASA picture), the goal, how a day works.</summary>
@@ -1183,7 +1174,7 @@ namespace MissionTrainer
             dSciTitle.text = d?.realScience?.title ?? "";
             dSciText.text = Gloss(d?.realScience?.text ?? "");
             Clear(dSciPhoto[0]);
-            var photo = NasaPhoto(dSciPhoto[0], m.id == "ch5_solarstorm" ? "ch5_aurora" : m.id, 100, false);
+            var photo = NasaPhoto(dSciPhoto[0], m.id, 100, false);
             dSciPhoto[0].gameObject.SetActive(photo != null);
 
             int real = 0, sim = 0;
@@ -1347,7 +1338,7 @@ namespace MissionTrainer
 
         static readonly Dictionary<string, string> TargetNames = new Dictionary<string, string>
         {
-            { "shelter", "Radiation shelter" }, { "airlock", "Way inside" }, { "bunk", "Bed" }, { "solar", "Solar panels" }, { "samples", "Rock sample" },
+            { "airlock", "Way inside" }, { "bunk", "Bed" }, { "solar", "Solar panels" }, { "samples", "Rock sample" },
             { "rover", "Perseverance" }, { "ice", "Ice deposit" }, { "weather", "Weather station" },
             { "suit", "Suit stand" }, { "airlockOut", "Airlock" },
         };
@@ -1373,7 +1364,6 @@ namespace MissionTrainer
             var from = Camera.main ? Camera.main.transform.position : Vector3.zero;
             switch (t)
             {
-                case "shelter": if (!playerLocation) return false; pos = playerLocation.shelter.center + Vector3.up; return true;
                 case "airlock": if (!playerLocation) return false; pos = playerLocation.airlock.center + new Vector3(0, 0, playerLocation.airlock.extents.z); return true;
                 case "bunk": if (!bunk) return false; pos = bunk.transform.position + Vector3.up; return true;
                 case "solar": return Nearest(solarStations, from, out pos);

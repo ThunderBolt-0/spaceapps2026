@@ -206,7 +206,6 @@ namespace MissionTrainer
                     var def = cfg?.System(id);
                     parts.Add(def != null ? $"Turns on {def.label} (-{def.powerPerSol:0}% power per sol)" : "Turns on " + id);
                 }
-            if (effects != null && effects.dose > 0) parts.Add($"Radiation +{effects.dose:0}");
             return parts.Count == 0 ? "No supplies used" : string.Join(" · ", parts);
         }
     }

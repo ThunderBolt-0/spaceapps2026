@@ -24,7 +24,6 @@ namespace MissionTrainer
             {
                 case "surviveSols": return $"Keep the habitat running until sol {g.target}.";
                 case "collectSamples": return $"Collect {g.target} rock samples and stay safe until sol {g.maxSols}.";
-                case "reachShelter": return "Get to the radiation shelter and stay safe.";
                 case "stayInContact": return $"Keep the radio working until sol {g.target}.";
                 case "research": return $"Earn {g.target} research points by sol {g.maxSols}.";
                 default: return "Stay safe.";
@@ -88,10 +87,6 @@ namespace MissionTrainer
 
             string Go(string where, string text) { setTarget(where); return text; }
 
-            if (env.radiation >= 1.5f && !s.inShelter)
-                return Go("shelter", "Solar storm! Go out through the airlock to the radiation shelter (yellow sign) and wait there.");
-            if (env.radiation >= 1.5f && s.inShelter)
-                return "You're safe in the shelter. Press N to wait out the storm.";
             bool callGoal = m.goal != null && m.goal.type == "stayInContact";
             if (callGoal && !s.IsOn(SystemIds.Radio) && !next.blackout && s.sol + 1 >= m.goal.target)
                 return Go("panel:" + SystemIds.Radio, "Contact comes back next sol! Turn the Radio ON so Earth can hear you.");

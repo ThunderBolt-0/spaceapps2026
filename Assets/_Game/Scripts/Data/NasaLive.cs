@@ -163,7 +163,7 @@ namespace MissionTrainer
             if (State != Status.Live) return "We couldn't reach NASA just now, so the game uses saved real NASA data.";
             string flare = !FlaresKnown ? "" : Flares == 0 ? "no solar flares, " : $"{Flares} solar flare{(Flares == 1 ? "" : "s")} (biggest: {BiggestFlare}, {BiggestFlareDate}), ";
             string cme = Cmes == 0 ? "no big clouds of Sun material (CMEs)" : $"{Cmes} big clouds of Sun material (CMEs, latest {LatestCmeDate})";
-            string sep = Seps == 0 ? "no radiation storms" : $"{Seps} radiation storm{(Seps == 1 ? "" : "s")} (latest {LatestSepDate})";
+            string sep = Seps == 0 ? "no particle storms" : $"{Seps} particle storm{(Seps == 1 ? "" : "s")} (latest {LatestSepDate})";
             return $"In the last 30 days the Sun had {flare}{cme}, and {sep}.";
         }
 

@@ -48,7 +48,7 @@ namespace MissionTrainer
             { "Every day", "Read. Do. Sleep.",
               "Each morning, a Mars Report shows today's sky. It uses real NASA data. Then do your missions, and press End the day." },
             { "Your mission", "Eight real Mars problems",
-              "Real rovers faced dust storms, cold, sand and solar storms. Get through each one and learn its lesson. Then the crew can land!" },
+              "Real rovers faced dust storms, cold nights, soft sand and broken wheels. Get through each one and learn its lesson. Then the crew can land!" },
         };
 
         static readonly Dictionary<string, string> DifficultyBlurb = new Dictionary<string, string>
@@ -500,6 +500,7 @@ namespace MissionTrainer
             LE(grid, prefH: 150);
             foreach (var item in ContentDb.ShopItems)
             {
+                if (item.stat == "shield") continue;   // radiation was removed from the game: this upgrade has no job
                 var it = item;
                 bool owned = SaveSystem.HasUpgrade(it.id);
                 bool afford = SaveSystem.Credits >= it.cost;
@@ -834,11 +835,11 @@ namespace MissionTrainer
             BadgeCard(badges, "Real · Archived", "Real measurements from a past date (the date is shown).", UIKit.Shield);
             BadgeCard(badges, "Simulated", "Made up by us to fill gaps, based on real science.", new Color(0.7f, 0.7f, 0.75f));
 
-            // Live NASA data: ask DONKI about radiation storms right now.
+            // Live NASA data: ask DONKI about the Sun's storms right now.
             var live = Box("Live", content, new Color(0.36f, 0.80f, 0.52f, 0.10f));
             VList(live, 6, 14);
             Overline(live.transform, "Space weather right now  ·  NASA DONKI", Good);
-            Label(live.transform, "DONKI is NASA's space weather database. It records every solar flare and radiation storm. Ask it about the last 30 days:", 15);
+            Label(live.transform, "DONKI is NASA's space weather database. It records every solar flare and every storm of particles from the Sun. Ask it about the last 30 days:", 15);
             liveResult = Label(live.transform, "", 15, TextAnchor.UpperLeft, Ink);
             var ask = Btn(live.transform, "Ask DONKI now (live)", 15, Good, 38, AskDonki);
             LE(ask, prefW: 240);
@@ -861,12 +862,13 @@ namespace MissionTrainer
 
             var snap = DonkiService.Snapshot;
             if (snap != null)
-                Label(content, $"Solar events come from a DONKI snapshot saved on {snap.snapshotDate} (Archived, not live).", 14, TextAnchor.UpperLeft, Muted);
+                Label(content, $"If NASA can't be reached, the game shows a DONKI snapshot saved on {snap.snapshotDate} (Real · Archived, not live).", 15, TextAnchor.UpperLeft, Muted);
 
             Overline(content, "Words to know");
             var gl = ContentDb.LoadJson<GlossaryList>("Data/glossary");
             if (gl?.entries != null)
                 foreach (var e in gl.entries)
+                    if (e.key != "radiation" && e.key != "dose" && e.key != "shielding")   // removed from the game
                     Label(content, $"<b>{e.word}</b>  <color=#FFFFFFAA>{e.meaning}</color>", 15);
             Spacer(content, 20);
         }
