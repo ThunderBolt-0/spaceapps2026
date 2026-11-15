@@ -85,7 +85,7 @@ namespace MissionTrainer
             csSub.gameObject.AddComponent<Shadow>().effectColor = new Color(0, 0, 0, 0.8f);
             csLines = Rect("Lines", panel);
             VList(csLines, 6, 0);
-            csHint = Label(cs, "", 14, TextAnchor.LowerRight, new Color(1, 1, 1, 0.55f));
+            csHint = Label(cs, "", 16, TextAnchor.LowerRight, new Color(1, 1, 1, 0.8f));
             Anchor(csHint.rectTransform, new Vector2(1, 0), new Vector2(1, 0), new Vector2(-420, 16), new Vector2(-20, 40));
             var skip = cs.gameObject.AddComponent<Button>();
             skip.transition = Selectable.Transition.None;
@@ -130,8 +130,8 @@ namespace MissionTrainer
             rockName = Label(col, "", 28, TextAnchor.UpperLeft, Ink, FontStyle.Bold);
             rockFact = Label(col, "", 16);
             rockWhy = Label(rp, "", 16, TextAnchor.UpperLeft, new Color(0.56f, 0.84f, 1f));
-            rockWhere = Label(rp, "", 14, TextAnchor.UpperLeft, Muted);
-            rockCount = Label(rp, "", 14, TextAnchor.UpperLeft, Gold);
+            rockWhere = Label(rp, "", TextSmall, TextAnchor.UpperLeft, Muted);
+            rockCount = Label(rp, "", TextSmall, TextAnchor.UpperLeft, Gold);
             Btn(rp, "<b>Awesome!</b>", 20, Accent, 52, () => rockOverlay.SetActive(false));
             rockOverlay.SetActive(false);
 
@@ -142,12 +142,7 @@ namespace MissionTrainer
 
         void BuildBanners(Transform hud)
         {
-            alertBg = Box("Alert", hud, new Color(0.7f, 0.1f, 0.08f, 0.95f));
-            var r = alertBg.rectTransform;
-            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 1);
-            r.anchoredPosition = new Vector2(0, -214);
-            r.sizeDelta = new Vector2(560, 60);
-            alertBg.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;   // grows with its text
+            alertBg = Box("Alert", UnderDayStack(hud), new Color(0.7f, 0.1f, 0.08f, 0.95f));   // stacks under the OUTSIDE bar
             var h = HList(alertBg, 12, 10, TextAnchor.MiddleLeft);
             h.childForceExpandHeight = false;
             IconImg(alertBg.transform, "alert", 32, Ink);
@@ -159,15 +154,13 @@ namespace MissionTrainer
         void TickBanners()
         {
             if (!alertBg) return;
+            underDay.anchoredPosition = new Vector2(0, UnderDayCard);   // the Day card's height changes with its text
             var s = runner.State;
             bool storm = MissionRunning && s.stormActive;
             bool night = MissionRunning && s.nightActive;
             bool show = (storm || night) && hudGroup.alpha > 0.5f;
             if (alertBg.gameObject.activeSelf != show) alertBg.gameObject.SetActive(show);
             if (!show) return;
-            // Stack under the Day card, and under the OUTSIDE bar when that's showing
-            float y = UnderDayCard - (evaBox && evaBox.activeSelf ? evaBg.rectTransform.rect.height + 8f : 0f);
-            alertBg.rectTransform.anchoredPosition = new Vector2(0, y);
             if (storm)
             {
                 float left = runner.StormSecondsLeft;

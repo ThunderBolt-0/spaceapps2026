@@ -27,6 +27,11 @@ namespace MissionTrainer
         public static readonly Color Shield = new Color(0.42f, 0.66f, 0.98f);
         public static readonly Color Gold = new Color(0.99f, 0.80f, 0.32f);
 
+        // Text sizes for 7-12 year olds (at the 1280x720 reference): nothing a player must read is smaller than Small.
+        public const int TextSmall = 15, TextBody = 17, TextKey = 20;
+        /// <summary>Smallest height for anything you click.</summary>
+        public const float MinTap = 44f;
+
         public static readonly Regex GlossaryTag = new Regex(@"\[\[(\w+)(?:\|([^\]]+))?\]\]");
 
         static Font font;
@@ -164,11 +169,12 @@ namespace MissionTrainer
             return t;
         }
 
-        /// <summary>Small spaced-out caps label, used for section headers ("YOUR CHOICES").</summary>
+        /// <summary>Small caps label, used for section headers ("YOUR CHOICES").</summary>
         public static Text Overline(Transform parent, string s, Color? color = null) =>
-            Label(parent, Spaced(s), 12, TextAnchor.UpperLeft, color ?? Accent, FontStyle.Bold);
+            Label(parent, Spaced(s), 14, TextAnchor.UpperLeft, color ?? Accent, FontStyle.Bold);
 
-        public static string Spaced(string s) => string.Join(" ", s.ToUpper().ToCharArray()).Replace("   ", "    ");
+        /// <summary>Header caps. (No extra letter spacing: spaced-out letters are hard for young readers and need tiny text.)</summary>
+        public static string Spaced(string s) => s.ToUpper();
 
         public static Button Btn(Transform parent, string s, int size, Color c, float height, UnityAction onClick, TextAnchor align = TextAnchor.MiddleCenter)
         {
@@ -265,8 +271,8 @@ namespace MissionTrainer
             var fit = raw.gameObject.AddComponent<AspectRatioFitter>();
             fit.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
             fit.aspectRatio = tex.width / (float)tex.height;
-            if (caption && !string.IsNullOrEmpty(info.caption)) Label(card.transform, info.caption, 13);
-            Label(card.transform, $"<b>Real NASA image</b>  ·  {info.title}  ·  {info.date}  ·  {info.credit}", 11, TextAnchor.UpperLeft, Muted);
+            if (caption && !string.IsNullOrEmpty(info.caption)) Label(card.transform, info.caption, TextSmall);
+            Label(card.transform, $"<b>Real NASA image</b>  ·  {info.title}  ·  {info.date}  ·  {info.credit}", 13, TextAnchor.UpperLeft, Muted);
             return card.rectTransform;
         }
 

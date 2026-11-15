@@ -38,7 +38,11 @@ namespace MissionTrainer
 
         class Gauge { public string name; public Image icon, fillImage; public Text label, detail; public RectTransform fill; }
         class Tile { public SystemDef def; public Button button; public Image bg, icon; public Text name, state, cost; }
-        class JobRow { public DayPlanner.Job job; public Image check, bg; public Text text, why; public Button action; }
+        class JobRow
+        {
+            public DayPlanner.Job job; public Image check, bg; public Text text, why; public Button action;
+            public HorizontalLayoutGroup lay; public LayoutElement checkLE; public int mode = -1;   // mode: 1 = the big "do this now" row
+        }
         bool StepMode => runner != null && runner.HasSteps;
 
         MissionRunner runner;
@@ -52,6 +56,7 @@ namespace MissionTrainer
         Text foodText, dayText, goalText, stampText, promptText, hintLine;
         Image stampIcon, crosshair;
         GameObject promptBox;
+        RectTransform promptRect, habBox;
         readonly List<Tile> tiles = new List<Tile>();
         RectTransform jobsList;
         Text jobsFooter;
@@ -173,18 +178,30 @@ namespace MissionTrainer
         /// <summary>Top of the free space under the Day card (banners stack from here).</summary>
         float UnderDayCard => -(16f + (dayCard ? dayCard.rect.height : 120f) + 10f);
 
+        /// <summary>
+        /// One column under the Day card for the OUTSIDE bar and the storm / night alert. A layout group stacks
+        /// whatever is showing, so the boxes can never overlap, however tall their text gets.
+        /// </summary>
+        RectTransform underDay;
+        RectTransform UnderDayStack(Transform hud)
+        {
+            if (underDay) return underDay;
+            underDay = Rect("UnderDay", hud);
+            underDay.anchorMin = underDay.anchorMax = underDay.pivot = new Vector2(0.5f, 1);
+            underDay.anchoredPosition = new Vector2(0, -180);
+            underDay.sizeDelta = new Vector2(500, 0);   // narrower than the gap between the gauges and the mission list
+            VList(underDay, 8, 0);
+            underDay.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            return underDay;
+        }
+
         void BuildEva(Transform hud)
         {
-            evaBg = Box("Outside", hud, new Color(0.45f, 0.12f, 0.08f, 0.88f));
-            var r = evaBg.rectTransform;
-            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 1);
-            r.anchoredPosition = new Vector2(0, -150);
-            r.sizeDelta = new Vector2(540, 58);
-            evaBg.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;   // grows with its text
+            evaBg = Box("Outside", UnderDayStack(hud), new Color(0.45f, 0.12f, 0.08f, 0.88f));
             var h = HList(evaBg, 12, 10, TextAnchor.MiddleLeft);
             h.childForceExpandHeight = false;
             IconImg(evaBg.transform, "air", 30, Ink);
-            evaText = Label(evaBg.transform, "", 15, TextAnchor.MiddleLeft, Ink);
+            evaText = Label(evaBg.transform, "", 16, TextAnchor.MiddleLeft, Ink);
             LE(evaText, flexW: 1);
             evaBox = evaBg.gameObject;
             evaBox.SetActive(false);
@@ -196,12 +213,11 @@ namespace MissionTrainer
             bool show = MissionRunning && worldMode && runner.State.outside && hudGroup.alpha > 0.5f;
             if (evaBox.activeSelf != show) evaBox.SetActive(show);
             if (!show) return;
-            evaBg.rectTransform.anchoredPosition = new Vector2(0, UnderDayCard);
             float floor = runner.AirFloor;
             float secs = runner.SecondsOfAirLeft(floor);
             float perSec = MissionRunner.LiveAirPerSecond * runner.Level.drainMultiplier;
             evaText.text = $"<b>OUTSIDE</b>  ·  Air <b>{runner.State.oxygen:0.0}%</b>  ·  -{perSec:0.0}% every second\n" +
-                           (AnyOverlay ? "Paused while you read." : $"About <b>{secs:0} seconds</b> of air left. Walk back to the airlock in time!");
+                           (AnyOverlay ? "Paused while you read." : $"About <b>{secs:0} seconds</b> of air left. Get back to the airlock!");
             float danger = Mathf.Clamp01(1 - (runner.State.oxygen - floor) / 30f);
             float pulse = danger > 0.5f ? 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 8f) : 0f;
             evaBg.color = Color.Lerp(new Color(0.18f, 0.2f, 0.26f, 0.88f), new Color(0.75f, 0.12f, 0.08f, 0.92f), Mathf.Max(danger * 0.7f, pulse));
@@ -293,6 +309,7 @@ namespace MissionTrainer
             if (worldMode)
             {
                 if (crosshair) crosshair.gameObject.SetActive(fpc && fpc.Looking);
+                PlacePrompt();
                 UpdateMarker();
             }
         }
@@ -365,10 +382,10 @@ namespace MissionTrainer
 
         void BuildGauges(Transform hud)
         {
-            var c = Card(hud, "Gauges", new Vector2(0, 1), new Vector2(16, -16), 300);
+            var c = Card(hud, "Gauges", new Vector2(0, 1), new Vector2(16, -16), 320);
             power = MakeGauge(c, "battery", "Battery");
             air = MakeGauge(c, "air", "Air");
-            foodText = Label(c, "", 14, TextAnchor.UpperLeft, Muted);
+            foodText = Label(c, "", TextSmall, TextAnchor.UpperLeft, Muted);
         }
 
         Gauge MakeGauge(Transform parent, string icon, string name)
@@ -383,7 +400,7 @@ namespace MissionTrainer
             LE(col, flexW: 1);
             g.label = Label(col, name, 18, TextAnchor.MiddleLeft, Ink, FontStyle.Bold);
             g.fill = Bar(col, 10, new Color(1, 1, 1, 0.12f), Good, out g.fillImage);
-            g.detail = Label(parent, "", 13, TextAnchor.UpperLeft, Muted);
+            g.detail = Label(parent, "", TextSmall, TextAnchor.UpperLeft, Muted);
             return g;
         }
 
@@ -398,7 +415,7 @@ namespace MissionTrainer
 
         void BuildDay(Transform hud)
         {
-            var c = Card(hud, "Day", new Vector2(0.5f, 1), new Vector2(0, -16), 470);
+            var c = Card(hud, "Day", new Vector2(0.5f, 1), new Vector2(0, -16), 450);
             dayCard = c;
             c.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
             dayText = Label(c, "", 26, TextAnchor.UpperCenter, Ink, FontStyle.Bold);
@@ -406,23 +423,23 @@ namespace MissionTrainer
             var stamp = Rect("Stamp", c);
             HList(stamp, 6, 0, TextAnchor.MiddleCenter);
             LE(stamp, prefH: 22);
-            stampIcon = IconImg(stamp, "satellite", 18, Good);
-            stampText = Label(stamp, "", 13, TextAnchor.MiddleLeft, Ink);
+            stampIcon = IconImg(stamp, "satellite", 20, Good);
+            stampText = Label(stamp, "", TextSmall, TextAnchor.MiddleLeft, Ink);
             stampText.horizontalOverflow = HorizontalWrapMode.Overflow;
             var row = Rect("Buttons", c);
             HList(row, 8, 0, TextAnchor.MiddleCenter);
-            LE(row, prefH: 32);
-            LE(Btn(row, "Mars Report", 14, Quiet, 0, () => { if (MissionRunning && !AnyOverlay) OpenReport(); }), prefW: 150);
-            LE(Btn(row, "Menu", 14, Quiet, 0, () => { if (MissionRunning && !AnyOverlay) OpenPause(); }), prefW: 100);
+            LE(row, prefH: MinTap);
+            LE(Btn(row, "Mars Report", 16, Quiet, 0, () => { if (MissionRunning && !AnyOverlay) OpenReport(); }), prefW: 170);
+            LE(Btn(row, "Menu", 16, Quiet, 0, () => { if (MissionRunning && !AnyOverlay) OpenPause(); }), prefW: 120);
         }
 
         void BuildJobs(Transform hud)
         {
-            var c = Card(hud, "Jobs", new Vector2(1, 1), new Vector2(-16, -16), 360);
+            var c = Card(hud, "Jobs", new Vector2(1, 1), new Vector2(-16, -16), 370);
             Overline(c, "Today's missions", Warn);
             jobsList = Rect("List", c);
-            VList(jobsList, 6, 0);
-            jobsFooter = Label(c, "", 13, TextAnchor.UpperLeft, Muted);
+            VList(jobsList, 5, 0);
+            jobsFooter = Label(c, "", TextSmall, TextAnchor.UpperLeft, Muted);
         }
 
         void BuildTiles(Transform hud)
@@ -430,28 +447,29 @@ namespace MissionTrainer
             var row = Rect("Systems", hud);
             row.anchorMin = row.anchorMax = row.pivot = Vector2.zero;
             row.anchoredPosition = new Vector2(16, 16);
-            row.sizeDelta = new Vector2(5 * 100 + 4 * 8, 112);
+            row.sizeDelta = new Vector2(5 * 116 + 4 * 8, 128);
             HList(row, 8, 0);
             foreach (var def in GameManager.Instance.Config.systems)
             {
                 var t = new Tile { def = def };
                 var d = def;
                 t.button = Btn(row, "", 14, Quiet, 0, () => { if (MissionRunning) runner.SetSystem(d.id, !runner.State.IsOn(d.id)); });
-                LE(t.button, prefW: 100);
+                LE(t.button, prefW: 116);
                 Clear(t.button.transform);
                 t.bg = t.button.GetComponent<Image>();
                 var v = Rect("V", t.button.transform);
                 Fill(v);
                 VList(v, 2, 8, TextAnchor.UpperCenter);
                 t.icon = IconImg(v, SystemLook.TryGetValue(def.id, out var look) ? look.icon : "box", 34, Ink);
-                t.name = Label(v, KidName(def.id), 13, TextAnchor.UpperCenter, Ink, FontStyle.Bold);
-                t.state = Label(v, "", 13, TextAnchor.UpperCenter, Ink, FontStyle.Bold);
-                t.cost = Label(v, "", 11, TextAnchor.UpperCenter, Muted);
+                t.name = Label(v, KidName(def.id), TextSmall, TextAnchor.UpperCenter, Ink, FontStyle.Bold);
+                t.state = Label(v, "", 17, TextAnchor.UpperCenter, Ink, FontStyle.Bold);
+                t.cost = Label(v, "", 13, TextAnchor.UpperCenter, Muted);
                 tiles.Add(t);
             }
-            hintLine = Label(hud, worldMode ? "Click a tile to switch it ON or OFF.   Walk: W A S D.   Turn: arrow keys (or hold the right mouse button)." : "Click a tile to switch it ON or OFF.", 13, TextAnchor.LowerLeft, Muted);
+            // Two short lines above the tiles (the HAB bubble sits higher, so they never overlap).
+            hintLine = Label(hud, worldMode ? "Click a tile to switch it ON or OFF.\nWalk: W A S D.   Turn: arrow keys (or hold the right mouse button)." : "Click a tile to switch it ON or OFF.", TextSmall, TextAnchor.LowerLeft, new Color(1, 1, 1, 0.8f));
             hintLine.gameObject.AddComponent<Shadow>();
-            Anchor(hintLine.rectTransform, Vector2.zero, new Vector2(0, 0), new Vector2(18, 132), new Vector2(18 + 700, 152));
+            Anchor(hintLine.rectTransform, Vector2.zero, new Vector2(0, 0), new Vector2(18, 150), new Vector2(18 + 610, 190));
         }
 
         void BuildHab(Transform hud)
@@ -459,8 +477,9 @@ namespace MissionTrainer
             var box = Box("HAB", hud, GlassDark);
             var r = box.rectTransform;
             r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0);
-            r.anchoredPosition = new Vector2(30, 160);
-            r.sizeDelta = new Vector2(560, 0);
+            r.anchoredPosition = new Vector2(-10, 200);   // above the tiles' hint lines; ends left of the mission list
+            r.sizeDelta = new Vector2(540, 0);
+            habBox = r;
             HList(box, 12, 12, TextAnchor.UpperLeft).childForceExpandHeight = false;
             box.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             habFace = IconImg(box.transform, "hab", 52, new Color(0.56f, 0.84f, 1f));
@@ -490,7 +509,7 @@ namespace MissionTrainer
             VList(col, 2, 0, TextAnchor.MiddleLeft);
             LE(col, flexW: 1);
             endDayLabel = Label(col, "End the day", 22, TextAnchor.MiddleLeft, Ink, FontStyle.Bold);
-            endDaySub = Label(col, "", 12, TextAnchor.MiddleLeft, new Color(1, 1, 1, 0.8f));
+            endDaySub = Label(col, "", TextSmall, TextAnchor.MiddleLeft, new Color(1, 1, 1, 0.9f));
         }
 
         void BuildCenter(Transform hud)
@@ -509,7 +528,17 @@ namespace MissionTrainer
             promptText = Label(pb.transform, "", 18, TextAnchor.MiddleCenter);
             promptText.horizontalOverflow = HorizontalWrapMode.Overflow;
             promptBox = pb.gameObject;
+            promptRect = pr;
             promptBox.SetActive(false);
+        }
+
+        /// <summary>The "press E" prompt moves up when HAB's speech bubble is tall, so the two never overlap.</summary>
+        void PlacePrompt()
+        {
+            if (!promptRect || !promptBox.activeSelf) return;
+            float habTop = habGroup && habGroup.alpha > 0.05f && habBox ? habBox.anchoredPosition.y + habBox.rect.height : 0f;   // from the bottom edge
+            float y = Mathf.Max(-60f, habTop + 12f + promptRect.rect.height * 0.5f - hudRoot.rect.height * 0.5f);
+            promptRect.anchoredPosition = new Vector2(0, y);
         }
 
         GameObject Overlay(Transform root, string name, float width, out RectTransform panel)
@@ -522,6 +551,7 @@ namespace MissionTrainer
             panel.sizeDelta = new Vector2(width, 0);
             VList(panel, 12, 26);
             panel.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            panel.gameObject.AddComponent<FitToScreen>();   // a tall pop-up shrinks to fit instead of running off the screen
             blocker.gameObject.SetActive(false);
             return blocker.gameObject;
         }
@@ -538,14 +568,15 @@ namespace MissionTrainer
             float oTrend = SimEngine.NetOxygenPreview(s, today, cfg, lvl);
 
             SetGauge(power, s.power / 100f, Word(s.power), Level(s.power),
-                $"{s.power:0}%   ·   {(pTrend >= 0 ? "+" : "")}{pTrend:0} tonight" + (s.panelDust >= 0.2f ? $"   ·   panels {s.panelDust * 100:0}% dusty" : ""));
+                $"{s.power:0}%  ·  {(pTrend >= 0 ? "+" : "")}{pTrend:0} tonight" + (s.panelDust >= 0.2f ? $"\nSolar panels {s.panelDust * 100:0}% dusty" : ""));
             float perSec = MissionRunner.LiveAirPerSecond * lvl.drainMultiplier;
             SetGauge(air, s.oxygen / 100f, Word(s.oxygen), Level(s.oxygen),
-                s.outside ? $"<color=#FFB0A0><b>{s.oxygen:0.0}%   ·   -{perSec:0.0}% every second outside</b></color>"
-                : s.IsOn(SystemIds.LifeSupport) ? $"{s.oxygen:0}%   ·   {(oTrend >= 0 ? "+" : "")}{oTrend:0} tonight" : "<color=#F08080>Air maker is OFF!</color>");
-            foodText.text = (s.outside ? "<color=#FFB0A0><b>Outside</b></color>" : "Inside the base") + "\n" +
-                $"Food: {s.food} days      Rocks: {s.samples}" + (s.samplesStudied > 0 ? $" ({s.samplesStudied} studied)" : "")
-                + $"\n<color=#FFD36B><b>Research points: {s.research}</b></color>      Suit: " + (s.suitOn ? "<color=#9CFFB8><b>ON</b></color>" : "<color=#FFFFFF99>on the stand</color>");
+                s.outside ? $"<color=#FFB0A0><b>{s.oxygen:0.0}%  ·  -{perSec:0.0}% every second</b></color>"
+                : s.IsOn(SystemIds.LifeSupport) ? $"{s.oxygen:0}%  ·  {(oTrend >= 0 ? "+" : "")}{oTrend:0} tonight" : "<color=#F08080><b>Air maker is OFF!</b></color>");
+            foodText.text = (s.outside ? "<color=#FFB0A0><b>You are outside</b></color>" : "You are inside the base") +
+                "  ·  Suit " + (s.suitOn ? "<color=#9CFFB8><b>ON</b></color>" : "off") + "\n" +
+                $"Food: {s.food} days  ·  Rocks: {s.samples}" + (s.samplesStudied > 0 ? $" ({s.samplesStudied} studied)" : "")
+                + $"\n<color=#FFD36B><b>Research points: {s.research}</b></color>";
 
             int maxDays = Mathf.Max(m.goal?.maxSols ?? 0, m.goal?.target ?? 0);
             dayText.text = StepMode
@@ -641,21 +672,40 @@ namespace MissionTrainer
             var j = job;
             var row = new JobRow { job = j };
             row.bg = Box("Job", jobsList, CardBg);
-            HList(row.bg, 10, 8, TextAnchor.MiddleLeft).childForceExpandHeight = false;
+            row.lay = HList(row.bg, 10, 8, TextAnchor.MiddleLeft);
+            row.lay.childForceExpandHeight = false;
             row.check = IconImg(row.bg.transform, "box", 26, Ink);
+            row.checkLE = row.check.GetComponent<LayoutElement>();
             var col = Rect("Col", row.bg.transform);
-            VList(col, 1, 0, TextAnchor.MiddleLeft);
+            VList(col, 2, 0, TextAnchor.MiddleLeft);
             LE(col, flexW: 1);
-            row.text = Label(col, "", 15, TextAnchor.MiddleLeft, Ink, FontStyle.Bold);
-            row.why = Label(col, j.why, 12, TextAnchor.MiddleLeft, Muted);
+            row.text = Label(col, "", TextSmall, TextAnchor.MiddleLeft, Ink, FontStyle.Bold);
+            row.why = Label(col, j.why, TextSmall, TextAnchor.MiddleLeft, new Color(1, 1, 1, 0.85f));
             // No teleport buttons ("Go", "Go now"): you walk there yourself, and every second outside costs air.
             bool teleport = j.action != null && (j.action.StartsWith("go:") || j.action == "inside");
             if (!string.IsNullOrEmpty(j.action) && !teleport)
             {
-                row.action = Btn(row.bg.transform, j.actionLabel ?? "Do it", 14, Accent, 0, () => DoAction(j));
-                LE(row.action, 70, 32);
+                row.action = Btn(row.bg.transform, $"<b>{j.actionLabel ?? "Do it"}</b>", 16, Accent, 0, () => DoAction(j));
+                LE(row.action, 92, MinTap);
             }
             jobRows.Add(row);
+        }
+
+        /// <summary>
+        /// The one mission to do now is a big card (bigger words, the reason why, its button). Finished and later
+        /// missions are short single lines, so a child sees at a glance what to do next.
+        /// </summary>
+        static void SetRowSize(JobRow r, bool big)
+        {
+            int mode = big ? 1 : 0;
+            if (r.mode == mode) return;
+            r.mode = mode;
+            r.text.fontSize = big ? 18 : TextSmall;
+            r.why.gameObject.SetActive(big);
+            int pad = big ? 12 : 6;
+            r.lay.padding = new RectOffset(10, 8, pad, pad);
+            float c = big ? 28 : 20;
+            r.checkLE.preferredWidth = r.checkLE.preferredHeight = r.checkLE.minWidth = c;
         }
 
         static bool Done(DayPlanner.Job j, HabitatState s) => j.done != null && j.done(s);
@@ -673,10 +723,13 @@ namespace MissionTrainer
             }
             var s = runner.State;
             int left = 0;
+            var now = jobRows.FirstOrDefault(x => !Done(x.job, s) && !Locked(x.job, s));   // the mission to do now
             foreach (var r in jobRows)
             {
                 bool done = Done(r.job, s);
                 bool locked = !done && Locked(r.job, s);
+                bool big = !done && !locked && (r == now || r.job.red);
+                SetRowSize(r, big);
                 if (!done && !r.job.optional) left++;
                 r.check.sprite = Icons.Get(done ? "check" : "box");
                 r.check.color = done ? Good : locked ? new Color(1, 1, 1, 0.3f) : Ink;
@@ -684,9 +737,10 @@ namespace MissionTrainer
                 r.text.text = done ? $"<color=#9CFFB8>{r.job.text}</color>" : locked ? $"<color=#FFFFFF66>{r.job.text}</color>" : r.job.text + (r.job.text.Contains("optional") ? "" : opt);
                 r.why.text = locked ? (r.job.stepLocked ? "Coming up next." : "Check the forecast first.") : r.job.why;
                 bool red = r.job.red && !done;
-                r.bg.color = done ? new Color(0.36f, 0.80f, 0.52f, 0.12f)
+                r.bg.color = done ? new Color(0.36f, 0.80f, 0.52f, 0.10f)
                     : red ? new Color(0.75f, 0.12f, 0.08f, 0.55f + 0.3f * Mathf.PingPong(Time.unscaledTime * 2f, 1f))
-                    : !locked && StepMode ? new Color(0.93f, 0.52f, 0.24f, 0.22f) : CardBg;
+                    : big ? new Color(0.93f, 0.52f, 0.24f, 0.32f)
+                    : locked ? new Color(1, 1, 1, 0.03f) : CardBg;
                 if (red) r.text.text = $"<color=#FFD0C8>{r.job.text}</color>";
                 if (r.action) r.action.gameObject.SetActive(!done && !locked);
             }
@@ -896,9 +950,9 @@ namespace MissionTrainer
             Overline(briefingBody, "How every day works", Muted);
             var steps = Rect("Steps", briefingBody);
             HList(steps, 10, 0);
-            LE(steps, prefH: 70);
-            Step(steps, "satellite", "1. Read the Mars Report", "Real NASA data about today");
-            Step(steps, "check", "2. Do today's missions", "Walk there, then hurry back");
+            LE(steps, prefH: 76);
+            Step(steps, "satellite", "1. Read the Mars Report", "Real NASA data for today");
+            Step(steps, "check", "2. Do today's missions", "Walk there, hurry back");
             Step(steps, "moon", "3. End the day", "The big orange button");
 
             var hz = Rect("Hazards", briefingBody);
@@ -914,7 +968,7 @@ namespace MissionTrainer
             }
 
             var lvl = GameManager.Instance.Level;
-            Label(briefingBody, $"Level: <b>{MenuUI.LevelName(lvl.id)}</b>" + (lvl.hintsOn ? "  ·  You get a job list and arrows that show the way." : lvl.id == "commander" ? "  ·  No job list: you decide!" : "  ·  You get a job list."), 14, TextAnchor.UpperLeft, Muted);
+            Label(briefingBody, $"Level: <b>{MenuUI.LevelName(lvl.id)}</b>" + (lvl.hintsOn ? "  ·  You get a job list and arrows that show the way." : lvl.id == "commander" ? "  ·  No job list: you decide!" : "  ·  You get a job list."), TextSmall, TextAnchor.UpperLeft, Muted);
 
             briefing.SetActive(true);
         }
@@ -929,7 +983,7 @@ namespace MissionTrainer
             VList(c, 0, 0, TextAnchor.MiddleLeft);
             LE(c, flexW: 1);
             Label(c, head, 16, TextAnchor.MiddleLeft, Ink, FontStyle.Bold);
-            Label(c, sub, 12, TextAnchor.MiddleLeft, Muted);
+            Label(c, sub, TextSmall, TextAnchor.MiddleLeft, Muted);
         }
 
         void StartFromBriefing()
@@ -951,7 +1005,7 @@ namespace MissionTrainer
             HList(head, 10, 0, TextAnchor.MiddleLeft);
             IconImg(head, "alert", 30, Warn);
             LE(Overline(head, "Decision time  ·  every choice has a cost", Warn), flexW: 1);
-            cardSol = Label(head, "", 13, TextAnchor.MiddleRight, Muted);
+            cardSol = Label(head, "", TextSmall, TextAnchor.MiddleRight, Muted);
             LE(cardSol, prefW: 90);
             cardPrompt = Label(p, "", 28, TextAnchor.UpperLeft, Ink, FontStyle.Bold);
             cardOptions = Rect("Options", p);
@@ -988,7 +1042,7 @@ namespace MissionTrainer
             {
                 var opt = card.options[i];
                 int index = i;
-                var b = Btn(cardOptions, "", 18, CardBg, 74, () => PickOption(index));
+                var b = Btn(cardOptions, "", 18, CardBg, 80, () => PickOption(index));
                 Clear(b.transform);
                 var h = Rect("H", b.transform);
                 Fill(h);
@@ -998,12 +1052,12 @@ namespace MissionTrainer
                 var c = Rect("C", h);
                 VList(c, 2, 0, TextAnchor.MiddleLeft);
                 LE(c, flexW: 1);
-                string tip = hints && opt.HasTag("priority") ? "   <color=#FFD54F><size=13>HAB says: safest!</size></color>" : "";
+                string tip = hints && opt.HasTag("priority") ? "   <color=#FFD54F><size=15>HAB says: safest!</size></color>" : "";
                 string locked = !opt.needsRadio ? ""
-                    : runner.NoContact ? "   <color=#F08080><size=13>no contact with Earth now</size></color>"
-                    : !runner.State.IsOn(SystemIds.Radio) ? "   <color=#F08080><size=13>needs the Radio ON</size></color>" : "";
+                    : runner.NoContact ? "   <color=#F08080><size=15>no contact with Earth now</size></color>"
+                    : !runner.State.IsOn(SystemIds.Radio) ? "   <color=#F08080><size=15>needs the Radio ON</size></color>" : "";
                 Label(c, $"<b>{opt.label}</b>{tip}{locked}", 18);
-                Label(c, "Cost: " + opt.Describe(runner.Config), 13, TextAnchor.MiddleLeft, new Color(1f, 0.78f, 0.6f));
+                Label(c, "<b>Cost:</b> " + opt.Describe(runner.Config), TextSmall, TextAnchor.MiddleLeft, new Color(1f, 0.78f, 0.6f));
                 b.interactable = runner.CanChoose(opt);
             }
             cardOverlay.SetActive(true);
@@ -1024,24 +1078,24 @@ namespace MissionTrainer
             pauseTitle = Label(p, "", 28, TextAnchor.UpperLeft, Ink, FontStyle.Bold);
             pauseGoal = Label(p, "", 16, TextAnchor.UpperLeft, Muted);
             Btn(p, "<b>Keep playing</b>", 19, Accent, 52, () => pauseOverlay.SetActive(false));
-            Btn(p, "How to play", 16, Quiet, 42, () => pauseHelp.SetActive(!pauseHelp.activeSelf));
+            Btn(p, "How to play", 17, Quiet, MinTap, () => pauseHelp.SetActive(!pauseHelp.activeSelf));
             pauseHelp = Label(p, HowToPlay, 16).gameObject;
             pauseHelp.SetActive(false);
 
             Overline(p, "Science words you've seen  ·  tap one to learn it", Muted);
             var words = Rect("Words", p);
             var grid = words.gameObject.AddComponent<GridLayoutGroup>();
-            grid.cellSize = new Vector2(135, 34);
-            grid.spacing = new Vector2(6, 6);
+            grid.cellSize = new Vector2(136, MinTap);
+            grid.spacing = new Vector2(8, 8);
             words.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             pauseWords = words;
 
             var row = Rect("Row", p);
             HList(row, 8, 0);
-            LE(row, prefH: 44);
-            LE(Btn(row, "Start this mission again", 15, Quiet, 0, () => { ClearForNewMission(); runner.Restart(); }), flexW: 1);
-            LE(Btn(row, "Stop safely", 15, Quiet, 0, () => { pauseOverlay.SetActive(false); runner.SafeAbort(); }), flexW: 1);
-            pauseQuit = Btn(row, "Title screen", 15, Quiet, 0, () => GameFlow.Current?.ShowTitle());
+            LE(row, prefH: 48);
+            LE(Btn(row, "Start again", 16, Quiet, 0, () => { ClearForNewMission(); runner.Restart(); }), flexW: 1);
+            LE(Btn(row, "Stop safely", 16, Quiet, 0, () => { pauseOverlay.SetActive(false); runner.SafeAbort(); }), flexW: 1);
+            pauseQuit = Btn(row, "Title screen", 16, Quiet, 0, () => GameFlow.Current?.ShowTitle());
             LE(pauseQuit, flexW: 1);
         }
 
@@ -1055,9 +1109,9 @@ namespace MissionTrainer
             foreach (var key in seenWords)
             {
                 var k = key;
-                Btn(pauseWords, ContentDb.Glossary(k)?.word ?? k, 14, new Color(0.30f, 0.55f, 0.80f, 0.4f), 0, () => ShowGlossary(k));
+                Btn(pauseWords, ContentDb.Glossary(k)?.word ?? k, TextSmall, new Color(0.30f, 0.55f, 0.80f, 0.4f), 0, () => ShowGlossary(k));
             }
-            if (seenWords.Count == 0) Label(pauseWords, "None yet", 13, TextAnchor.MiddleLeft, Muted);
+            if (seenWords.Count == 0) Label(pauseWords, "None yet", TextSmall, TextAnchor.MiddleLeft, Muted);
             pauseOverlay.SetActive(true);
         }
 
@@ -1231,7 +1285,7 @@ namespace MissionTrainer
             infoBody = Label(p, "", 18);
             var badge = Box("Badge", p, CardBg);
             VList(badge, 0, 12);
-            infoBadge = Label(badge.transform, "", 14, TextAnchor.UpperLeft, Muted);
+            infoBadge = Label(badge.transform, "", TextSmall, TextAnchor.UpperLeft, new Color(1, 1, 1, 0.8f));
             Btn(p, "Got it", 19, Accent, 50, () => infoOverlay.SetActive(false));
         }
 
