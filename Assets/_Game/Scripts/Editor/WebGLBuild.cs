@@ -38,7 +38,9 @@ namespace MissionTrainer.EditorTools
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
             PlayerSettings.WebGL.decompressionFallback = true;   // works even if the server doesn't send compression headers
             PlayerSettings.WebGL.dataCaching = true;
-            PlayerSettings.WebGL.nameFilesAsHashes = false;
+            // Hashed file names: each build gets new names, so a browser never mixes a cached old .wasm/.data
+            // with a new build (that mix crashed startup with "Maximum call stack size exceeded").
+            PlayerSettings.WebGL.nameFilesAsHashes = true;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
             // Keep every file under Cloudflare Pages' 25 MiB limit: textures at most 1024 px in the web build
             // (2048 terrain/rock textures are 4x bigger and barely shrink with gzip). The editor keeps full size.
@@ -119,9 +121,10 @@ namespace MissionTrainer.EditorTools
                 Directory.CreateDirectory(Path.GetDirectoryName(dst));
                 File.Copy(src, dst, true);
             }
-            // Cache the big game files for an hour; the page itself always fresh.
+            // Build files have hashed names (a new build = new names), so they can be cached for good;
+            // the page is always fresh, so it always points at the matching set.
             File.WriteAllText(Path.Combine(WebDir, "_headers"),
-                "/Build/*\n  Cache-Control: public, max-age=3600\n/index.html\n  Cache-Control: no-cache\n");
+                "/Build/*\n  Cache-Control: public, max-age=31536000, immutable\n/\n  Cache-Control: no-cache\n/index.html\n  Cache-Control: no-cache\n");
             sb.AppendLine($"Copied to {Path.GetFullPath(WebDir)} (for Cloudflare Pages).");
             foreach (var f in Directory.GetFiles(WebDir, "*", SearchOption.AllDirectories))
                 if (new FileInfo(f).Length > CloudflareMaxFile)
