@@ -1,0 +1,239 @@
+{
+    "id":  "ch8_icehunters",
+    "mode":  "story",
+    "chapter":  8,
+    "title":  "Ice Hunters",
+    "site":  "Meridiani Planum",
+    "goalText":  "Earn 260 research points by sol 7. Ice is worth the most, but it\u0027s far away.",
+    "intro":  [
+                  "HAB: The crew of six will need water. Water can also be split into oxygen to breathe!",
+                  "HAB: Mission Control will send maps of ice hidden under the ground. Ice spots are far from the base.",
+                  "HAB: Each trip is your choice. Ice gives big research, but the walk and the drilling use a lot of air."
+              ],
+    "start":  {
+                  "power":  85,
+                  "oxygen":  90,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  7,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "research",
+                 "target":  260,
+                 "maxSols":  7
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Air got too low on a long ice trip. HAB did a safe abort and guided you home."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.95,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.95,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0.2,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear, chilly day"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Cold night ahead"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Cold night ahead"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.6,
+                     "tau":  2.2,
+                     "radiation":  1,
+                     "cold":  0.2,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Dusty sky"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.85,
+                     "tau":  0.9,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clearing sky"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.95,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  1,
+                       "mc":  "Good morning, ice hunter! Our orbiters look for ice hiding under the dust. We\u0027ll send you maps.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  3,
+                       "hab":  "HAB: Tip: go for ice when your air is high, and come straight back after drilling.",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  5,
+                       "hab":  "HAB: The sky is dusty today. Stay close to home and save power.",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+
+              ],
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "ice",
+                                   "samples:2",
+                                   "status",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:1",
+                                   "ice",
+                                   "repair",
+                                   "status",
+                                   "clean"
+                               ],
+                     "roverFault":  "Its drill got clogged with frozen dirt."
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:1",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "ice",
+                                   "samples:2",
+                                   "status",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ]
+                 }
+             ],
+    "debrief":  {
+                    "realTeam":  "In 2008 the Phoenix lander dug a small trench near Mars\u0027s north pole. Its camera saw bright white chunks that slowly disappeared over a few days: water ice turning straight into gas! Phoenix then heated a sample in its oven and confirmed it was water. Today, NASA scientists make maps of where ice hides under the ground, to help choose landing sites for future crews.",
+                    "tryNext":  "Go for ice early in the day with high air. Keep the Air maker on overnight so the ice turns into oxygen.",
+                    "realScience":  {
+                                        "title":  "Making air on Mars",
+                                        "text":  "Water can be split into hydrogen and oxygen using electricity. The Perseverance rover carried MOXIE, a small machine that really made oxygen from the Martian air between 2021 and 2023!",
+                                        "glossary":  ""
+                                    },
+                    "sources":  [
+                                    "phoenix_ice",
+                                    "moxie",
+                                    "swim"
+                                ]
+                }
+}

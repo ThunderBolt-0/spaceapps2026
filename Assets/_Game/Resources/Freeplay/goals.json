@@ -1,0 +1,38 @@
+{
+  "goals": [
+    {
+      "id": "survive", "title": "Hold the Fort",
+      "intro": ["HAB: New mission! Keep the habitat running for 6 [[sol|sols]]."],
+      "goal": { "type": "surviveSols", "target": 6, "maxSols": 6 },
+      "evaEverySols": 0,
+      "tryNext": "Watch the power arrow. Turn things off before the battery gets low."
+    },
+    {
+      "id": "samples", "title": "Rock Hunter",
+      "intro": ["HAB: Scientists on Earth want 3 rock samples. Only samples we keep safe count!"],
+      "goal": { "type": "collectSamples", "target": 3, "maxSols": 8 },
+      "evaEverySols": 2,
+      "evaCard": {
+        "id": "eva", "prompt": "Go outside on an [[eva|EVA]] for a rock sample?", "icon": "rock",
+        "options": [
+          { "label": "Go on an EVA", "icon": "suit", "needsRadio": false,
+            "hab": "Got one! Back inside, safe and sound.",
+            "cost": { "power": 0, "oxygen": 10, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "samples": 1, "dose": 3 }, "tags": [] },
+          { "label": "Stay inside this time", "icon": "home", "needsRadio": false,
+            "hab": "OK. We'll try another sol.",
+            "cost": { "power": 0, "oxygen": 0, "food": 0, "sols": 0, "credits": 0 },
+            "effects": {}, "tags": [] }
+        ]
+      },
+      "tryNext": "Go outside when the sky is calm, and keep enough oxygen for the trip."
+    },
+    {
+      "id": "contact", "title": "Keep in Touch",
+      "intro": ["HAB: Earth needs to hear from us on sol 6. Keep the radio working!"],
+      "goal": { "type": "stayInContact", "target": 6, "maxSols": 6 },
+      "evaEverySols": 0,
+      "tryNext": "The radio uses a little power. Turn off other things to save it."
+    }
+  ]
+}

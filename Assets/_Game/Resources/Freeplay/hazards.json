@@ -1,0 +1,80 @@
+{
+  "hazards": [
+    {
+      "id": "dust", "title": "Dust Storm", "kind": "dust",
+      "startMin": 2, "startMax": 3, "duration": 3,
+      "sunlight": 0.3, "tau": 4, "radiation": 0, "cold": 0.2,
+      "hab": "HAB: A dust storm! Less sun for our panels.",
+      "card": {
+        "id": "dust", "prompt": "Dust is piling up on the panels.", "icon": "dust",
+        "options": [
+          { "label": "Clean the panels (EVA)", "icon": "suit", "needsRadio": false,
+            "hab": "Panels are shiny again!",
+            "cost": { "power": 0, "oxygen": 8, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "power": 15, "dose": 2 }, "tags": [] },
+          { "label": "Turn off the science lab", "icon": "microscope", "needsRadio": false,
+            "hab": "Lab off. That saves power every sol.",
+            "cost": { "power": 0, "oxygen": 0, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "turnOff": ["science"] }, "tags": ["priority"] }
+        ]
+      }
+    },
+    {
+      "id": "cold", "title": "Cold Night", "kind": "cold",
+      "startMin": 2, "startMax": 4, "duration": 2,
+      "sunlight": 0, "tau": 0, "radiation": 0, "cold": 0.6,
+      "hab": "HAB: Brrr. Tonight will be very cold.",
+      "card": {
+        "id": "cold", "prompt": "A very cold night is coming.", "icon": "snow",
+        "options": [
+          { "label": "Keep the heater on, turn off greenhouse", "icon": "heater", "needsRadio": false,
+            "hab": "Warm and safe. Plants can wait.",
+            "cost": { "power": 0, "oxygen": 0, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "turnOn": ["heater"], "turnOff": ["greenhouse"] }, "tags": ["priority"] },
+          { "label": "Turn the heater off to save power", "icon": "snow", "needsRadio": false,
+            "hab": "Saving power, but life support will be slow in the cold.",
+            "cost": { "power": 0, "oxygen": 0, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "turnOff": ["heater"] }, "tags": [] }
+        ]
+      }
+    },
+    {
+      "id": "solar", "title": "Solar Storm", "kind": "solarEvent",
+      "startMin": 2, "startMax": 4, "duration": 2,
+      "sunlight": 0, "tau": 0, "radiation": 2, "cold": 0,
+      "hab": "HAB: Alert! The Sun just sent out a burst of [[radiation]].",
+      "card": {
+        "id": "solar", "prompt": "Solar storm! Radiation is going up.", "icon": "sun",
+        "options": [
+          { "label": "Go to the shelter (procedure card)", "icon": "shield", "needsRadio": false,
+            "hab": "Safe in the shelter. Thick walls block radiation.",
+            "cost": { "power": 3, "oxygen": 0, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "shield": 0.5 }, "tags": ["procedure", "priority"] },
+          { "label": "Keep working outside", "icon": "suit", "needsRadio": false,
+            "hab": "We got a sample, but your dose went up.",
+            "cost": { "power": 0, "oxygen": 5, "food": 0, "sols": 0, "credits": 0 },
+            "effects": { "samples": 1, "dose": 20 }, "tags": [] }
+        ]
+      }
+    },
+    {
+      "id": "silence", "title": "Radio Silence", "kind": "silence",
+      "startMin": 2, "startMax": 3, "duration": 1,
+      "sunlight": 0, "tau": 0, "radiation": 0, "cold": 0,
+      "hab": "HAB: The Sun is between Mars and Earth. This is a [[conjunction|solar conjunction]].",
+      "card": {
+        "id": "silence", "prompt": "Something broke and Earth can't help right now.", "icon": "card",
+        "options": [
+          { "label": "Use a procedure card", "icon": "card", "needsRadio": false,
+            "hab": "Step 1, step 2, step 3... fixed!",
+            "cost": { "power": 2, "oxygen": 0, "food": 0, "sols": 0, "credits": 0 },
+            "effects": {}, "tags": ["procedure"] },
+          { "label": "Wait for Earth to reply", "icon": "radio", "needsRadio": true,
+            "hab": "Earth finally answered. That took a while!",
+            "cost": { "power": 0, "oxygen": 0, "food": 0, "sols": 2, "credits": 0 },
+            "effects": {}, "tags": [] }
+        ]
+      }
+    }
+  ]
+}

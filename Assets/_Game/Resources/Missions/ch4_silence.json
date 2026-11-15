@@ -1,0 +1,452 @@
+{
+    "id":  "ch4_silence",
+    "mode":  "story",
+    "chapter":  4,
+    "title":  "Silence",
+    "site":  "Meridiani Planum",
+    "goalText":  "Get through the radio silence on your own, then call Earth on sol 8 (Radio ON).",
+    "intro":  [
+                  "HAB: Big news. The Sun is moving between Mars and Earth. This is called a [[conjunction|solar conjunction]].",
+                  "HAB: For a while, Earth won\u0027t be able to hear us, and we won\u0027t hear them. No help from Mission Control.",
+                  "HAB: That\u0027s OK. We have procedure cards: step-by-step plans written for exactly this."
+              ],
+    "start":  {
+                  "power":  90,
+                  "oxygen":  80,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "greenhouse"
+                                ]
+              },
+    "goal":  {
+                 "type":  "stayInContact",
+                 "target":  8,
+                 "maxSols":  8
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Oxygen got low, so HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  false,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Last day of contact"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  true,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Conjunction: no contact (real blackouts last about 2 weeks)"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  true,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Conjunction: no contact"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.85,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  true,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Conjunction: no contact"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.85,
+                     "tau":  0.8,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  true,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Conjunction: no contact"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.5,
+                     "tau":  3.0,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  true,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Local dust storm, no contact"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.55,
+                     "tau":  2.5,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  true,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Dust clearing, no contact"
+                                }
+                 },
+                 {
+                     "sol":  8,
+                     "sunlight":  0.8,
+                     "tau":  1.0,
+                     "radiation":  1,
+                     "cold":  0,
+                     "blackout":  false,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Conjunction over: contact is back"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  1,
+                       "mc":  "Last message before the silence: switch off what you don\u0027t need, and trust your procedure cards. Talk soon!",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  2,
+                       "hab":  "HAB: The silence has started. Earth can\u0027t hear our radio now.",
+                       "card":  "radio_plan"
+                   },
+                   {
+                       "sol":  4,
+                       "hab":  "HAB: I hear a strange noise from the greenhouse water pump.",
+                       "card":  "pump"
+                   },
+                   {
+                       "sol":  6,
+                       "hab":  "HAB: A local dust storm is blowing in. Nobody on Earth can warn us, so we follow our plan.",
+                       "card":  "dust_plan"
+                   },
+                   {
+                       "sol":  7,
+                       "hab":  "HAB: Tomorrow Earth will be able to hear us again. Get the Radio ready!",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "radio_plan",
+                      "prompt":  "Earth can\u0027t hear us for now. What about the Radio?",
+                      "icon":  "radio",
+                      "options":  [
+                                      {
+                                          "label":  "Procedure card: turn the Radio off until contact returns",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "Radio off. No point using power to talk when nobody can listen.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "radio"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Keep the Radio on, just in case",
+                                          "icon":  "radio",
+                                          "needsRadio":  false,
+                                          "hab":  "OK, but the Radio keeps using power every sol while nobody can hear it.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth what to do",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "",
+                                          "cost":  {
+                                                       "power":  3,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "pump",
+                      "prompt":  "The greenhouse pump is making a strange noise.",
+                      "icon":  "plant",
+                      "options":  [
+                                      {
+                                          "label":  "Procedure card: Pump check, steps 1 to 5",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "Step 1, clean the filter. Step 2, check the hose... Fixed! Procedures work even when we\u0027re alone.",
+                                          "cost":  {
+                                                       "power":  3,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Turn the greenhouse off for now",
+                                          "icon":  "plant",
+                                          "needsRadio":  false,
+                                          "hab":  "The pump is quiet, but the plants stop growing food.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  1,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "greenhouse"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth how to fix it",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "",
+                                          "cost":  {
+                                                       "power":  3,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  2,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "dust_plan",
+                      "prompt":  "A dust storm is coming and nobody can warn us.",
+                      "icon":  "dust",
+                      "options":  [
+                                      {
+                                          "label":  "Procedure card: Dust plan, save power",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "Plan followed: greenhouse lights dimmed until the sky clears. We\u0027ll eat from our food store.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "greenhouse",
+                                                                          "science"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Go outside to look at the storm",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "Wow, what a view! But that trip used a lot of oxygen.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  8,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "dose":  2
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "debrief":  {
+                    "realTeam":  "About every 26 months, Mars and Earth end up on opposite sides of the Sun. For about two weeks, the Sun\u0027s hot gas can scramble radio signals, so mission teams stop sending commands. Before each conjunction, rover teams upload a simple, safe plan so the rovers can keep working on their own until contact comes back.",
+                    "tryNext":  "Turn the Radio off when the silence starts, use procedure cards, and remember to turn the Radio back on before the last sol.",
+                    "realScience":  {
+                                        "title":  "Why the Sun blocks the radio",
+                                        "text":  "The Sun gives off hot, electrically charged gas called plasma. When the Sun sits between Earth and Mars, radio waves have to pass close to it, and the plasma scrambles them. Teams plan ahead so nothing risky happens while nobody can talk.",
+                                        "glossary":  "conjunction"
+                                    },
+                    "sources":  [
+                                    "mer_historynasa_images"
+                                ]
+                },
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "repair",
+                                   "clean",
+                                   "weather"
+                               ],
+                     "roverFault":  "Its computer keeps restarting, and Earth can\u0027t help."
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  8,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 }
+             ]
+}

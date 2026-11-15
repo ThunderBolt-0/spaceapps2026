@@ -107,3 +107,12 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# ── The Red Frontier: project-specific ──
+# Plastic SCM (Unity Version Control) workspace data
+.plastic/
+ignore.conf
+# Editor-local settings and generated burst output
+.vscode/
+/[Dd]ata/
+# The WebGL build for Cloudflare Pages IS committed: web/ (copied there by Mission Trainer > Build WebGL)

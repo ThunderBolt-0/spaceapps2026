@@ -1,0 +1,284 @@
+{
+    "id":  "ch7_wheeltrouble",
+    "mode":  "story",
+    "chapter":  7,
+    "title":  "Wheel Trouble",
+    "site":  "Meridiani Planum",
+    "goalText":  "Earn 200 research points by sol 7. Keep Perseverance rolling!",
+    "intro":  [
+                  "HAB: Scientists want lots of research this week. Rocks, repairs and ice all earn research points.",
+                  "HAB: The ground near the base is full of sharp rocks. They are hard on rover wheels.",
+                  "HAB: If Perseverance breaks, walk out and fix it. Stay close until the repair is done!"
+              ],
+    "start":  {
+                  "power":  85,
+                  "oxygen":  85,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "research",
+                 "target":  200,
+                 "maxSols":  7
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Air got low after long repairs outside. HAB did a safe abort and brought you in."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.95,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.95,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.9,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0.2,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Cool day"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.9,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Cold night ahead"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.95,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.95,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  2,
+                       "hab":  "HAB: Perseverance found a field of sharp, pointy rocks on the way to the next science stop.",
+                       "card":  "route"
+                   },
+                   {
+                       "sol":  3,
+                       "mc":  "Our engineers looked at the wheel photos. Please drive on smooth sand when you can.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  5,
+                       "hab":  "HAB: Another hole in a wheel. Rovers can still drive with damaged wheels, but they need care.",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "route",
+                      "prompt":  "Which way should Perseverance drive to the next rocks?",
+                      "icon":  "rover",
+                      "options":  [
+                                      {
+                                          "label":  "The long way, over smooth sand",
+                                          "icon":  "rover",
+                                          "hab":  "Smart! Smooth sand is kind to wheels. That\u0027s what Curiosity\u0027s team did in 2013.",
+                                          "cost":  {
+                                                       "power":  6,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+                                                       "priority",
+                                                       "procedure"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "The short way, over the sharp rocks",
+                                          "icon":  "rock",
+                                          "hab":  "Crunch! The sharp rocks poked a new hole in a wheel. Shorter isn\u0027t always better.",
+                                          "cost":  {
+                                                       "power":  2,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "repair",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ],
+                     "roverFault":  "A sharp rock poked a hole in a wheel."
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "ice",
+                                   "status",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "repair",
+                                   "weather",
+                                   "clean"
+                               ],
+                     "roverFault":  "A wheel is bent from a big bump."
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "repair",
+                                   "weather",
+                                   "clean"
+                               ],
+                     "roverFault":  "A loose stone is stuck between the wheel spokes."
+                 }
+             ],
+    "debrief":  {
+                    "realTeam":  "In 2013 the Curiosity team saw holes and tears in the rover\u0027s thin aluminum wheels, made by sharp rocks. They started planning routes over smoother ground and checked the wheels with Curiosity\u0027s own camera. In 2017 they sent new software that changes how fast each wheel spins, so the wheels push less hard on sharp rocks. Curiosity kept driving for many more years.",
+                    "tryNext":  "Pick smooth routes, fix the rover on calm days, and keep the Science lab on to study your rocks for extra research.",
+                    "realScience":  {
+                                        "title":  "Why rover wheels are thin",
+                                        "text":  "Every kilogram sent to Mars costs a lot of fuel, so rover parts are made as light as possible. Thin wheels are light, but sharp rocks can poke holes in them.",
+                                        "glossary":  ""
+                                    },
+                    "sources":  [
+                                    "msl_wheels"
+                                ]
+                }
+}

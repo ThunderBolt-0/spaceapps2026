@@ -1,0 +1,400 @@
+{
+    "id":  "ch1_storm",
+    "mode":  "story",
+    "chapter":  1,
+    "title":  "The Storm",
+    "site":  "Meridiani Planum",
+    "intro":  [
+                  "HAB: Good morning, Astronaut! We live where the rover Opportunity landed."
+              ],
+    "start":  {
+                  "power":  100,
+                  "oxygen":  90,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  8,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "steps",
+                 "target":  0,
+                 "maxSols":  0
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort and kept you safe."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Oxygen got low, so HAB did a safe abort to keep you safe."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  1.00,
+                     "tau":  1.0,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2018-06-03",
+                                    "label":  "Opportunity made 468 Wh (tau estimated)"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.74,
+                     "tau":  2.1,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2018-06-04",
+                                    "label":  "Opportunity made 345 Wh, tau 2.1"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.50,
+                     "tau":  2.6,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Between real readings"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.28,
+                     "tau":  3.0,
+                     "radiation":  1,
+                     "cold":  0.2,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2018-06-06",
+                                    "label":  "Opportunity made 133 Wh, tau above 3"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.20,
+                     "tau":  4.5,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Between real readings"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.15,
+                     "tau":  6.0,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Between real readings"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.10,
+                     "tau":  8.5,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Between real readings"
+                                }
+                 },
+                 {
+                     "sol":  8,
+                     "sunlight":  0.05,
+                     "tau":  10.8,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2018-06-10",
+                                    "label":  "Opportunity made about 22 Wh, tau 10.8"
+                                }
+                 }
+             ],
+    "events":  [
+
+               ],
+    "cards":  [
+                  {
+                      "id":  "radio_or_heater",
+                      "prompt":  "Power is low. What do we keep on?",
+                      "icon":  "choice",
+                      "options":  [
+                                      {
+                                          "label":  "Keep the heater. Turn off the radio.",
+                                          "icon":  "heater",
+                                          "needsRadio":  false,
+                                          "hab":  "Good call. Warm parts don\u0027t break. Earth will wait for us.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "radio"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Keep the radio. Turn off the heater.",
+                                          "icon":  "radio",
+                                          "needsRadio":  false,
+                                          "hab":  "Earth can hear us. But the cold will slow down life support.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "heater"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth what to do",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "Message sent. Earth is far away, so the answer comes late. Earth says: keep warm, go quiet.",
+                                          "cost":  {
+                                                       "power":  5,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Use procedure card: Dust Storm",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "The card says: keep warm, keep breathing, go quiet. Radio and lab are off.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "radio",
+                                                                          "science"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "sleep_mode",
+                      "prompt":  "The battery is dropping fast. Go to sleep mode?",
+                      "icon":  "battery",
+                      "options":  [
+                                      {
+                                          "label":  "Sleep mode: only life support stays on",
+                                          "icon":  "moon",
+                                          "needsRadio":  false,
+                                          "hab":  "Shhh. We are saving every bit of power, just like Opportunity did.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "heater",
+                                                                          "radio",
+                                                                          "science",
+                                                                          "greenhouse"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "priority",
+                                                       "procedure"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Keep things as they are",
+                                          "icon":  "check",
+                                          "needsRadio":  false,
+                                          "hab":  "OK. Watch the power meter closely!",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "debrief":  {
+                    "realTeam":  "In June 2018 a giant dust storm covered the sky over Opportunity. Its solar panels made less and less power: 468 Wh on June 3, but only about 22 Wh by June 10. The rover went to sleep to protect itself. June 10 was the last time Earth heard from it. The team kept listening for about 8 months, then ended the mission in February 2019.",
+                    "tryNext":  "Turn off the science lab early, before the storm gets bad. Every bit of saved power helps later.",
+                    "realScience":  {
+                                        "title":  "What is tau?",
+                                        "text":  "Tau is a number for how dusty the sky is. Around 0.5 is a clear Mars day. During this storm, tau reached 10.8, one of the dustiest skies ever measured on Mars.",
+                                        "glossary":  "tau"
+                                    },
+                    "sources":  [
+                                    "opp2018_power",
+                                    "nasa_images"
+                                ]
+                },
+    "days":  null,
+    "forecastNote":  "NASA forecast: a dust storm is growing far away. Right now it doesn\u0027t look severe. (In June 2018, a storm like this grew fast over Opportunity.)",
+    "steps":  [
+                  {
+                      "kind":  "hab",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Talk to HAB",
+                      "why":  "HAB has news about the weather.",
+                      "hab":  "HAB: Good morning! Something is going on with the weather. Click Talk.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "forecast",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Get the NASA forecast",
+                      "why":  "Real data from Opportunity\u0027s 2018 storm.",
+                      "hab":  "HAB: Let\u0027s see what NASA\u0027s forecast says. Click Open.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "status",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Check your status",
+                      "why":  "Look at the gauges and the system screens. Click Check.",
+                      "hab":  "HAB: Before going out, always check: battery, air, food and your systems.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "suitUp",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Put on your spacesuit",
+                      "why":  "Click the suit stand in the base.",
+                      "hab":  "HAB: Suit up! Click the suit stand.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "leaveAirlock",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Go out through the airlock",
+                      "why":  "Walk into the tunnel. Your air drops every second outside.",
+                      "hab":  "HAB: Out you go. Watch your air!",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "samples",
+                      "arg":  null,
+                      "count":  5,
+                      "text":  "Collect 5 rock samples",
+                      "why":  "Find the blue light beams.",
+                      "hab":  "HAB: The crew wants 5 rock samples before the storm. Go!",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "rover",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Go to Perseverance",
+                      "why":  "Walk to the rover and click it.",
+                      "hab":  "HAB: Now go to Perseverance. It can drive you to the ice.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "ping",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Ride to the pinged location",
+                      "why":  "Click the rover to drive there, or follow the blue marker.",
+                      "hab":  "MC: We pinged a spot with buried ice. Bring back 3 ice samples!",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "ice",
+                      "arg":  "storm",
+                      "count":  3,
+                      "text":  "Collect 3 ice deposits",
+                      "why":  "Click each icy patch to drill. Each one costs air.",
+                      "hab":  "HAB: Drill the three icy patches. Hurry, the sky is getting darker...",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "returnBase",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "EMERGENCY: Dust storm! Return to base",
+                      "why":  "Ride the rover home or run! If you leave before all 3 ice, the ice stays behind.",
+                      "hab":  "HAB: Get back to the base! Every second counts.",
+                      "red":  true
+                  },
+                  {
+                      "kind":  "night",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Survive the night",
+                      "why":  "No sun! Switch off what you don\u0027t need. Keep the Air maker on.",
+                      "hab":  "HAB: The storm covered our panels and the Sun has set. The battery is draining! Choose which systems to switch off until sunrise.",
+                      "red":  false
+                  }
+              ],
+    "goalText":  "Collect rocks and ice for the crew, then get through a dust storm and the night."
+}

@@ -1,0 +1,4 @@
+{
+  "apiKey": "DEMO_KEY",
+  "note": "Get a free personal key at https://api.nasa.gov (1,000 requests per hour) and paste it above. DEMO_KEY is shared by everyone and often rate-limited. Anything in a WebGL build can be read by players; NASA keys are free and low-risk."
+}

@@ -1,0 +1,305 @@
+{
+    "id":  "ch9_memoryglitch",
+    "mode":  "story",
+    "chapter":  9,
+    "title":  "Memory Glitch",
+    "site":  "Meridiani Planum",
+    "goalText":  "Keep the base and the rover working for 7 sols. Send a report to Earth every day you can.",
+    "intro":  [
+                  "HAB: Perseverance\u0027s computer memory is acting strange. It keeps forgetting things overnight!",
+                  "HAB: If the rover forgets its data, the science is lost. Send reports home before night.",
+                  "HAB: When it crashes, walk out and restart it. Every trip outside costs air."
+              ],
+    "start":  {
+                  "power":  80,
+                  "oxygen":  85,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio"
+                                ]
+              },
+    "goal":  {
+                 "type":  "surviveSols",
+                 "target":  7,
+                 "maxSols":  7
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Air got low after too many trips outside. HAB did a safe abort and brought you in."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.9,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.9,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0.2,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.85,
+                     "tau":  0.9,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Cold night ahead"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.8,
+                     "tau":  1.2,
+                     "radiation":  1,
+                     "cold":  0.4,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Hazy, cold"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.85,
+                     "tau":  0.9,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Cold night ahead"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.9,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.9,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  2,
+                       "mc":  "We lost some of the rover\u0027s data last night. Please send your reports every day.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  3,
+                       "hab":  "HAB: The rover restarted three times last night. We need a plan.",
+                       "card":  "memory"
+                   },
+                   {
+                       "sol":  6,
+                       "mc":  "Your daily reports are perfect. The science is safe. Thank you, Astronaut!",
+                       "hab":  "",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "memory",
+                      "prompt":  "The rover\u0027s long-term memory is broken. What\u0027s the plan?",
+                      "icon":  "rover",
+                      "options":  [
+                                      {
+                                          "label":  "Use only short-term memory and send data home every day",
+                                          "icon":  "radio",
+                                          "hab":  "Great plan! That\u0027s exactly what the Opportunity team did in 2015.",
+                                          "cost":  {
+                                                       "power":  4,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOn":  [
+                                                                         "radio"
+                                                                     ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth to fix it (wait 1 sol for an answer)",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "Earth says: use short-term memory and send data every day. Waiting cost us a sol.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ignore it and hope it gets better",
+                                          "icon":  "home",
+                                          "hab":  "The rover forgot another day of science. Problems rarely fix themselves.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:1",
+                                   "status",
+                                   "repair",
+                                   "weather",
+                                   "clean"
+                               ],
+                     "roverFault":  "Its computer forgot everything and restarted."
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:1",
+                                   "status",
+                                   "repair",
+                                   "clean",
+                                   "weather"
+                               ],
+                     "roverFault":  "Its memory got scrambled again."
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "ice",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:1",
+                                   "status",
+                                   "repair",
+                                   "weather",
+                                   "clean"
+                               ],
+                     "roverFault":  "It\u0027s stuck restarting over and over."
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 }
+             ],
+    "debrief":  {
+                    "realTeam":  "In 2014 and 2015, Opportunity\u0027s flash memory (the part that remembers things overnight) started to fail. The rover kept forgetting its data and restarting, which the team called \u0027amnesia\u0027. They told it to use only its short-term memory. That meant it had to send its data to Earth every day before shutting down for the night. Opportunity kept exploring until 2018.",
+                    "tryNext":  "Keep the Radio on and send a report every day. Fix the rover quickly so your trips outside stay short.",
+                    "realScience":  {
+                                        "title":  "Short-term and long-term memory",
+                                        "text":  "Computers have fast memory that is wiped when the power turns off, and slower memory that keeps data overnight. Opportunity lost the overnight kind, so it had to send everything home before going to sleep.",
+                                        "glossary":  ""
+                                    },
+                    "sources":  [
+                                    "mer_history"
+                                ]
+                }
+}

@@ -1,0 +1,529 @@
+{
+    "id":  "ch0_training",
+    "mode":  "story",
+    "chapter":  0,
+    "title":  "First Sols",
+    "site":  "Meridiani Planum",
+    "intro":  [
+                  "HAB: Welcome to Meridiani Base, Astronaut! I\u0027m HAB, the habitat computer.",
+                  "HAB: Today you\u0027ll learn how to live on Mars, one step at a time. Follow the mission list on the right."
+              ],
+    "start":  {
+                  "power":  85,
+                  "oxygen":  90,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "greenhouse",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "steps",
+                 "target":  0,
+                 "maxSols":  0
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort and kept you safe."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Oxygen got low, so HAB did a safe abort. Life support needs power to make oxygen."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort. Greenhouse lights grow food."
+                  },
+                  {
+                      "meter":  "dose",
+                      "op":  "\u003e=",
+                      "value":  100,
+                      "message":  "Your radiation dose reached the safe limit, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test sky: clear"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.4,
+                     "tau":  4.0,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test dust storm"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.4,
+                     "tau":  3.0,
+                     "radiation":  1,
+                     "cold":  0.7,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test cold night"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  1.0,
+                     "tau":  0.8,
+                     "radiation":  8,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test solar storm"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  1.0,
+                     "tau":  0.8,
+                     "radiation":  8,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test solar storm"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0.9,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test soft sand"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Test sky: clear"
+                                }
+                 }
+             ],
+    "events":  [
+
+               ],
+    "cards":  [
+                  {
+                      "id":  "test_dust",
+                      "prompt":  "Dust is cutting our power. What do we do?",
+                      "icon":  "dust",
+                      "options":  [
+                                      {
+                                          "label":  "Turn off the science lab",
+                                          "icon":  "microscope",
+                                          "needsRadio":  false,
+                                          "hab":  "Lab off. That saves power every sol.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "science"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Go outside and clean the panels",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "Panels are clean! That was a lot of oxygen, though.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  8,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "power":  15,
+                                                          "dose":  2
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth what to do",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "Earth\u0027s answer took a whole sol to arrive. Earth says: turn off what you don\u0027t need.",
+                                          "cost":  {
+                                                       "power":  3,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Use procedure card: Low Power",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "Procedure card: science lab and radio off. Done right away, no waiting.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "science",
+                                                                          "radio"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "test_storm",
+                      "prompt":  "Solar storm! Radiation is 8 times higher for 2 sols.",
+                      "icon":  "sun",
+                      "options":  [
+                                      {
+                                          "label":  "Procedure card: walk to the shelter now",
+                                          "icon":  "shield",
+                                          "needsRadio":  false,
+                                          "hab":  "Go! The shelter is outside, past the airlock. Its thick walls block most radiation. Stay there and sleep with N.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Put up shield panels in the habitat",
+                                          "icon":  "shield",
+                                          "needsRadio":  false,
+                                          "hab":  "Shield panels are up. They help a little.",
+                                          "cost":  {
+                                                       "power":  8,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "shield":  0.3
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Keep working outside",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "You found a rock sample, but your radiation dose went up a lot.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  5,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "samples":  1,
+                                                          "dose":  15
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "test_sand",
+                      "prompt":  "The rover is stuck in soft sand. What now?",
+                      "icon":  "rover",
+                      "options":  [
+                                      {
+                                          "label":  "Drive out slowly, a little each sol",
+                                          "icon":  "rover",
+                                          "needsRadio":  false,
+                                          "hab":  "Slow and steady. That\u0027s how Opportunity escaped Purgatory Dune in 2005.",
+                                          "cost":  {
+                                                       "power":  6,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Go out and dig the wheels free",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "Hard work! The wheels are free, but digging used a lot of oxygen.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  10,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "dose":  2
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "debrief":  {
+                    "realTeam":  "Real Mars teams switch off anything they don\u0027t need when power is low, hide from solar storms behind thick walls, and free stuck rovers very slowly.",
+                    "tryNext":  "Turn off what you do not need before the power gets low, and plan short trips outside: every second out there uses air.",
+                    "realScience":  {
+                                        "title":  "Aurora on Mars",
+                                        "text":  "Mars has [[aurora|auroras]] too! When a solar storm hits, particles from the Sun make the sky glow. In 2024 the rover Perseverance took the first picture of an aurora from the ground on Mars.",
+                                        "glossary":  "aurora"
+                                    },
+                    "sources":  [
+                                    "nasa_images",
+                                    "mer_history"
+                                ]
+                },
+    "days":  null,
+    "forecastNote":  "Your first forecast! Every morning, check the sky before you plan your day.",
+    "steps":  [
+                  {
+                      "kind":  "hab",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Answer HAB\u0027s first call",
+                      "why":  "Your habitat computer wants to say hello.",
+                      "hab":  "HAB: Incoming call... Click Talk on the mission list to connect with me!",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "forecast",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Get the NASA forecast",
+                      "why":  "Real NASA data tells you what today will be like.",
+                      "hab":  "HAB: Every Mars morning starts with the forecast. Click Open.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "system",
+                      "arg":  "lifeSupport",
+                      "count":  0,
+                      "text":  "Click the Life support tile (Air maker)",
+                      "why":  "It makes the air you breathe. It uses the most power.",
+                      "hab":  "HAB: Life support, the Air maker, makes oxygen and cleans the air. It\u0027s the most important system! Click its tile at the bottom of the screen: OFF, then ON again.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "system",
+                      "arg":  "greenhouse",
+                      "count":  0,
+                      "text":  "Click the Plant lights tile (Greenhouse)",
+                      "why":  "Plants need light to grow your food.",
+                      "hab":  "HAB: The Greenhouse lights grow food. No light, no salad! Click the Plant lights tile.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "system",
+                      "arg":  "heater",
+                      "count":  0,
+                      "text":  "Click the Heater tile",
+                      "why":  "Mars nights can reach -80 Â°C.",
+                      "hab":  "HAB: The Heater keeps the base warm. Cold also slows down the Air maker. Click the Heater tile.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "system",
+                      "arg":  "radio",
+                      "count":  0,
+                      "text":  "Click the Radio tile",
+                      "why":  "The Radio is how you talk to Earth.",
+                      "hab":  "HAB: The Radio sends messages to Earth. They take between 3 and 22 minutes to arrive, because Mars is so far away! Click the Radio tile.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "system",
+                      "arg":  "science",
+                      "count":  0,
+                      "text":  "Click the Science lab tile",
+                      "why":  "The lab studies the rocks and ice you bring back.",
+                      "hab":  "HAB: The Science lab studies rocks and ice and earns research points. Click the Science lab tile, and leave it ON for later.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "suitUp",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Put on your spacesuit",
+                      "why":  "Click the suit stand in the base.",
+                      "hab":  "HAB: Mars has almost no air, and it\u0027s very cold. Click the suit stand to put on your spacesuit.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "leaveAirlock",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Go out through the airlock",
+                      "why":  "Walk into the tunnel. The doors open as you get close.",
+                      "hab":  "HAB: In the airlock, one door closes behind you, the pumps move the air, then the next door opens. Outside, your air drops every second!",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "clean",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Clean the solar panels",
+                      "why":  "Dusty panels make less power. Click the panels.",
+                      "hab":  "HAB: Dust settled on our solar panels overnight. Walk to them and click to clean them.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "samples",
+                      "arg":  null,
+                      "count":  5,
+                      "text":  "Collect 5 rock samples",
+                      "why":  "Find the blue light beams. Some rocks are rare!",
+                      "hab":  "HAB: Scientists want rocks! Walk to the blue light beams and click each rock. Every rock could be a rare find for your collection.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "repair",
+                      "arg":  "Its computer sent an error code.",
+                      "count":  0,
+                      "text":  "Repair Perseverance",
+                      "why":  "Go to the rover, click it and stay close.",
+                      "hab":  "HAB: Perseverance sent an error code. Walk to the rover and click it to repair it. Stay close until it\u0027s done.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "repair",
+                      "arg":  "Two of its tires are worn out from sharp rocks.",
+                      "count":  0,
+                      "text":  "Repair Perseverance\u0027s tires",
+                      "why":  "Click the rover again and stay close.",
+                      "hab":  "HAB: Now the tires! Sharp rocks wear them out. Click the rover again to fix them.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "ping",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Go to the pinged location",
+                      "why":  "Follow the blue marker, or click the rover to ride there.",
+                      "hab":  "MC: Our orbiter pinged a spot with buried ice! We marked it on your map. You can ride Perseverance there.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "ice",
+                      "arg":  null,
+                      "count":  3,
+                      "text":  "Collect 3 ice deposits",
+                      "why":  "Click each icy patch to drill. Each one costs air.",
+                      "hab":  "HAB: Ice is real water! Drill all three icy patches.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "returnBase",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Return to base",
+                      "why":  "Ride the rover home, or walk back through the airlock.",
+                      "hab":  "HAB: Great job! Now get back inside before your air runs low.",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "lab",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Scan your rocks and ice in the Science lab",
+                      "why":  "Click Scan. The Science lab must be ON.",
+                      "hab":  "HAB: Let\u0027s study what you found. Click Scan on the mission list (or click the Science lab console).",
+                      "red":  false
+                  },
+                  {
+                      "kind":  "sleep",
+                      "arg":  null,
+                      "count":  0,
+                      "text":  "Go to bed",
+                      "why":  "Your first sol is done! Click the bed or End the day.",
+                      "hab":  "HAB: What a day! Take off your suit and get some sleep. Click the bed.",
+                      "red":  false
+                  }
+              ],
+    "goalText":  "Learn the base, step by step: systems, airlock, panels, rocks, rover, ice and the Science lab."
+}

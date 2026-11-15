@@ -1,0 +1,394 @@
+{
+    "id":  "ch2_coldnight",
+    "mode":  "story",
+    "chapter":  2,
+    "title":  "Cold Night",
+    "site":  "Meridiani Planum",
+    "goalText":  "Get through the Mars winter: keep the habitat running until sol 8.",
+    "intro":  [
+                  "HAB: Winter is coming. The Sun stays low, so our [[solar|solar panels]] make less power every [[sol]].",
+                  "HAB: The nights get very cold. The Heater keeps our machines alive, but it uses a lot of power.",
+                  "HAB: Tip: save power early. Every system you switch off now helps us later."
+              ],
+    "start":  {
+                  "power":  100,
+                  "oxygen":  80,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  5,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "greenhouse",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "surviveSols",
+                 "target":  8,
+                 "maxSols":  8
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty in the cold. HAB did a safe abort and kept you warm."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Oxygen got low because life support slowed down in the cold. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.60,
+                     "tau":  0.4,
+                     "radiation":  1,
+                     "cold":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Late autumn: low winter sun"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.55,
+                     "tau":  0.4,
+                     "radiation":  1,
+                     "cold":  0.5,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Days getting shorter"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.50,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0.6,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Winter begins"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.42,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0.7,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Deep winter"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.38,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0.8,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Coldest nights"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.36,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0.9,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Coldest nights"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.40,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0.8,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Winter easing"
+                                }
+                 },
+                 {
+                     "sol":  8,
+                     "sunlight":  0.45,
+                     "tau":  0.5,
+                     "radiation":  1,
+                     "cold":  0.7,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Spring is coming"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  1,
+                       "mc":  "Winter forecast: shorter days and very cold nights. Make your power plan now, not later.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  1,
+                       "hab":  "HAB: Look at the Power meter. With everything on, the battery goes down every sol.",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  3,
+                       "hab":  "HAB: Brrr. Winter is here. Frost is forming outside.",
+                       "card":  "winter_power"
+                   },
+                   {
+                       "sol":  4,
+                       "mc":  "We\u0027re proud of you. Spring is closer than it feels. Keep the Heater and Life support going.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  5,
+                       "hab":  "HAB: This is the coldest part of winter. The battery is getting tired.",
+                       "card":  "hibernate"
+                   },
+                   {
+                       "sol":  7,
+                       "hab":  "HAB: The Sun is climbing higher again. We\u0027re almost through!",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "winter_power",
+                      "prompt":  "Winter cuts our power. What do we switch off?",
+                      "icon":  "snow",
+                      "options":  [
+                                      {
+                                          "label":  "Turn off the Science lab and the Radio",
+                                          "icon":  "power",
+                                          "needsRadio":  false,
+                                          "hab":  "Good choice. We keep the things that keep us alive: air and heat.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "science",
+                                                                          "radio"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Turn off the Heater to save power",
+                                          "icon":  "heater",
+                                          "needsRadio":  false,
+                                          "hab":  "We save power, but in this cold, life support makes much less oxygen.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "heater"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth what to switch off",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "Earth\u0027s answer took a whole sol. They say: keep life support and heat, switch off the rest.",
+                                          "cost":  {
+                                                       "power":  4,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "hibernate",
+                      "prompt":  "The battery is low tonight. Go into low-power sleep?",
+                      "icon":  "moon",
+                      "options":  [
+                                      {
+                                          "label":  "Procedure card: low-power sleep",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "Sleep mode on. Only life support and the Heater stay awake. We\u0027ll eat from our food store.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "greenhouse",
+                                                                          "science",
+                                                                          "radio"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Keep the greenhouse lights on for fresh food",
+                                          "icon":  "plant",
+                                          "needsRadio":  false,
+                                          "hab":  "The plants are happy, but the lights use power every sol.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "science",
+                                                                          "radio"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "debrief":  {
+                    "realTeam":  "In 2009 the rover Spirit got stuck in soft soil and could not turn its solar panels toward the low winter Sun. As the Mars winter came, its power kept dropping and it went into a deep sleep to save energy. Spirit sent its last message on March 22, 2010. The team listened for more than a year and ended the mission in May 2011.",
+                    "tryNext":  "Switch off the Science lab and the Radio on the very first sol. Saving power early is what gets you through winter.",
+                    "realScience":  {
+                                        "title":  "Why winter is hard for solar power",
+                                        "text":  "In winter the Sun stays low in the sky, so its light hits the panels at a slant and makes less power. The nights are colder too, so heaters need more energy. Spirit was stuck at a bad angle, tilted away from the Sun, which made winter even harder.",
+                                        "glossary":  "solar"
+                                    },
+                    "sources":  [
+                                    "mer_historynasa_images"
+                                ]
+                },
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "ice",
+                                   "clean",
+                                   "status"
+                               ]
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  8,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 }
+             ]
+}

@@ -1,0 +1,68 @@
+{
+    "note":  "Images from the NASA Image and Video Library (images.nasa.gov), downloaded 2026-11-14 and embedded (the image host does not allow loading from other websites).",
+    "images":  [
+                   {
+                       "key":  "ch0_training",
+                       "nasaId":  "PIA21494",
+                       "title":  "Rover Landing Hardware at Eagle Crater, Mars",
+                       "date":  "2017-04-21",
+                       "credit":  "NASA/JPL-Caltech/Univ. of Arizona",
+                       "url":  "https://images.nasa.gov/details/PIA21494",
+                       "caption":  "Seen from orbit: the parachute and heat shield that landed the rover Opportunity near Eagle crater in 2004. Your base is right next door."
+                   },
+                   {
+                       "key":  "ch1_storm",
+                       "nasaId":  "PIA22329",
+                       "title":  "Dust Storm Covers Opportunity",
+                       "date":  "2018-06-10",
+                       "credit":  "NASA/JPL-Caltech/MSSS",
+                       "url":  "https://images.nasa.gov/details/PIA22329",
+                       "caption":  "A real weather map made by a spacecraft orbiting Mars: the giant dust storm covering Opportunity in June 2018."
+                   },
+                   {
+                       "key":  "ch2_coldnight",
+                       "nasaId":  "PIA12203",
+                       "title":  "Calypso Panorama of Spirit View from Troy",
+                       "date":  "2009-08-26",
+                       "credit":  "NASA/JPL-Caltech/Cornell University",
+                       "url":  "https://images.nasa.gov/details/PIA12203",
+                       "caption":  "What Spirit saw from Troy, the place where it spent its last Mars winter."
+                   },
+                   {
+                       "key":  "ch3_stuck",
+                       "nasaId":  "PIA12337",
+                       "title":  "Computer Reconstruction of Spirit Predicament",
+                       "date":  "2009-11-04",
+                       "credit":  "NASA/JPL-Caltech",
+                       "url":  "https://images.nasa.gov/details/PIA12337",
+                       "caption":  "A computer model of how Spirit sat stuck in soft soil at Troy in 2009, built so the team could plan how to get it out."
+                   },
+                   {
+                       "key":  "ch4_silence",
+                       "nasaId":  "PIA16811",
+                       "title":  "Geometry of Mars Solar Conjunction",
+                       "date":  "2013-03-20",
+                       "credit":  "NASA/JPL-Caltech",
+                       "url":  "https://images.nasa.gov/details/PIA16811",
+                       "caption":  "Solar conjunction: the Sun sits between Earth and Mars, and its hot gas scrambles radio signals."
+                   },
+                   {
+                       "key":  "ch5_solarstorm",
+                       "nasaId":  "PIA21856",
+                       "title":  "Solar Storm\u0027s Radiation at Martian Orbit and Surface",
+                       "date":  "2017-09-29",
+                       "credit":  "NASA/JPL-Caltech/Univ. of Colorado/SwRI-Boulder/UC Berkeley",
+                       "url":  "https://images.nasa.gov/details/PIA21856",
+                       "caption":  "Real measurements from the September 2017 solar storm: MAVEN in orbit and Curiosity\u0027s RAD on the surface, where radiation more than doubled."
+                   },
+                   {
+                       "key":  "ch5_aurora",
+                       "nasaId":  "PIA21855",
+                       "title":  "Solar Storm Triggers Whole-Planet Aurora at Mars",
+                       "date":  "2017-09-29",
+                       "credit":  "NASA/Univ. of Colorado",
+                       "url":  "https://images.nasa.gov/details/PIA21855",
+                       "caption":  "During the same storm, the MAVEN orbiter saw the whole planet glow with aurora."
+                   }
+               ]
+}

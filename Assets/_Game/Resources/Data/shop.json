@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "id": "battery_pack", "label": "Extra battery", "description": "Start each Freeplay mission with +10% power.", "stat": "startPower", "amount": 10, "cost": 30 },
+    { "id": "oxygen_tank", "label": "Spare oxygen tank", "description": "Start with +10% oxygen.", "stat": "startOxygen", "amount": 10, "cost": 30 },
+    { "id": "seed_kit", "label": "Seed kit", "description": "Start with 2 more food.", "stat": "startFood", "amount": 2, "cost": 20 },
+    { "id": "shield_panel", "label": "Shield panels", "description": "Block 20% of radiation.", "stat": "shield", "amount": 0.2, "cost": 40 }
+  ]
+}

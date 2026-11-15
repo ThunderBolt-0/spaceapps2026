@@ -1,0 +1,96 @@
+{
+    "snapshotDate":  "2026-11-14",
+    "note":  "Real solar energetic particle (SEP) events fetched from NASA DONKI (api.nasa.gov/DONKI/SEP) on 2026-11-14. Events were measured near Earth and by STEREO-A. The Mars radiation level is a game estimate, except September 2017 (Curiosity RAD).",
+    "events":  [
+                   {
+                       "id":  "2017-09-04T23:52:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2017-09-04",
+                       "classType":  "SOHO: COSTEP 15.8-39.8 MeV",
+                       "note":  "Linked flare: 2017-09-04T20:15:00-FLR-001",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2017-09-05T00:30:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2017-09-05",
+                       "classType":  "GOES13: SEM/EPS \u003e10 MeV",
+                       "note":  "Linked flare: 2017-09-04T20:15:00-FLR-001",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2017-09-06T23:45:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2017-09-06",
+                       "classType":  "GOES13: SEM/EPS \u003e10 MeV",
+                       "note":  "Linked flare: 2017-09-04T20:15:00-FLR-001",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2017-09-10T16:25:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2017-09-10",
+                       "classType":  "GOES13: SEM/EPS \u003e100 MeV",
+                       "note":  "Linked flare: 2017-09-10T15:35:00-FLR-001",
+                       "marsRadiationMultiplier":  2,
+                       "multiplierSource":  "real: Curiosity\u0027s RAD measured radiation on the Mars surface more than doubling (Sept 2017)"
+                   },
+                   {
+                       "id":  "2017-09-13T05:33:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2017-09-13",
+                       "classType":  "STEREO A: IMPACT 13-100 MeV",
+                       "note":  "Linked flare: 2017-09-12T07:23:00-FLR-001",
+                       "marsRadiationMultiplier":  2,
+                       "multiplierSource":  "real: Curiosity\u0027s RAD measured radiation on the Mars surface more than doubling (Sept 2017)"
+                   },
+                   {
+                       "id":  "2017-09-17T23:40:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2017-09-17",
+                       "classType":  "STEREO A: IMPACT 13-100 MeV",
+                       "note":  "",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2024-05-09T14:25:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2024-05-09",
+                       "classType":  "MODEL: REleASE:SOHO/EPHIN 15.8-39.8 MeV",
+                       "note":  "Linked flare: 2024-05-09T08:45:00-FLR-001",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2024-05-10T13:35:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2024-05-10",
+                       "classType":  "GOES-P: SEISS \u003e10 MeV",
+                       "note":  "Linked flare: 2024-05-08T04:20:00-FLR-001",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2024-05-11T02:10:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2024-05-11",
+                       "classType":  "GOES-P: SEISS \u003e100 MeV",
+                       "note":  "Linked flare: 2024-05-11T01:10:00-FLR-001",
+                       "marsRadiationMultiplier":  2.5,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   },
+                   {
+                       "id":  "2024-05-13T16:19:00-SEP-001",
+                       "type":  "SEP",
+                       "date":  "2024-05-13",
+                       "classType":  "MODEL: REleASE:ACE/EPAM 15.8-39.8 MeV",
+                       "note":  "Linked flare: 2024-05-13T08:06:00-FLR-001",
+                       "marsRadiationMultiplier":  1.6,
+                       "multiplierSource":  "simulated: game estimate from the event\u0027s particle energy"
+                   }
+               ]
+}

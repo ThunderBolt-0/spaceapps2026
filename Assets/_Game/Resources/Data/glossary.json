@@ -1,0 +1,22 @@
+{
+  "entries": [
+    { "key": "tau", "word": "tau", "meaning": "How dusty the sky is. Bigger number = more dust = less sunlight." },
+    { "key": "sol", "word": "sol", "meaning": "One Mars day. It is about 40 minutes longer than a day on Earth." },
+    { "key": "solar", "word": "solar panel", "meaning": "A flat panel that turns sunlight into electricity." },
+    { "key": "battery", "word": "battery", "meaning": "Stores power so you can use it later, even at night." },
+    { "key": "oxygen", "word": "oxygen", "meaning": "The part of air your body needs to breathe." },
+    { "key": "radiation", "word": "radiation", "meaning": "Invisible energy from the Sun and space. Too much is not safe for people." },
+    { "key": "dose", "word": "dose", "meaning": "How much radiation your body got in total." },
+    { "key": "shielding", "word": "shielding", "meaning": "Walls or material that block radiation, like a sun umbrella for your body." },
+    { "key": "procedure", "word": "procedure card", "meaning": "Step-by-step instructions written ahead of time for an emergency." },
+    { "key": "conjunction", "word": "solar conjunction", "meaning": "When the Sun is between Mars and Earth, so radio messages can't get through." },
+    { "key": "eva", "word": "EVA", "meaning": "Going outside in your spacesuit. It stands for extra-vehicular activity." },
+    { "key": "habitat", "word": "habitat", "meaning": "Your home base on Mars." },
+    { "key": "blueberries", "word": "blueberries", "meaning": "Tiny grey balls of a mineral called hematite that Opportunity found at Meridiani. They formed in water long ago." },
+    { "key": "mc", "word": "Mission Control", "meaning": "The team on Earth that watches over a space mission and sends advice by radio." },
+    { "key": "softsand", "word": "soft sand", "meaning": "Loose, fluffy sand. Rover wheels dig in and spin instead of moving." },
+    { "key": "aurora", "word": "aurora", "meaning": "Glowing lights in the sky, made when particles from the Sun hit the air." },
+    { "key": "gravity", "word": "gravity", "meaning": "The pull that keeps you on the ground. Mars pulls about a third as hard as Earth." },
+    { "key": "commdelay", "word": "comm delay", "meaning": "Radio messages take minutes to travel between Mars and Earth, so answers come late." }
+  ]
+}

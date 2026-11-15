@@ -1,0 +1,364 @@
+{
+    "id":  "ch5_solarstorm",
+    "mode":  "story",
+    "chapter":  5,
+    "title":  "Solar Storm",
+    "site":  "Meridiani Planum",
+    "goalText":  "Stay safe through the solar storm: be in the radiation shelter while radiation is high (sols 3 and 4).",
+    "intro":  [
+                  "HAB: Space weather watch! Scientists keep an eye on the Sun all the time, because it can throw out storms of fast particles.",
+                  "HAB: When a solar storm hits, [[radiation]] goes up. The safest place is the radiation shelter outside. Its thick soil roof blocks most of it.",
+                  "HAB: Learn the way now: out through the airlock, then follow the yellow sign."
+              ],
+    "start":  {
+                  "power":  90,
+                  "oxygen":  85,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "surviveSols",
+                 "target":  6,
+                 "maxSols":  6
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Oxygen got low, so HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "dose",
+                      "op":  "\u003e=",
+                      "value":  100,
+                      "message":  "Your radiation dose reached the safe limit, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Quiet Sun"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2017-09-10",
+                                    "label":  "DONKI: radiation storm 2017-09-10 16:25 UT (GOES-13 \u003e100 MeV), from flare at 15:35 UT"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  2.0,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2017-09-11",
+                                    "label":  "Mars surface radiation about doubled (Curiosity RAD), DONKI SEP 2017-09-10"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  2.0,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "archived",
+                                    "date":  "2017-09-12",
+                                    "label":  "Radiation still about double (Curiosity RAD); DONKI SEP seen again 2017-09-13"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Storm over"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  1.0,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Quiet Sun"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  1,
+                       "mc":  "Space weather report: the Sun is very busy. If we see a big flare, we\u0027ll warn you right away.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  1,
+                       "hab":  "HAB: The Sun is quiet today. A good time to walk to the shelter and back, so you know the way.",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  2,
+                       "mc":  "FLARE ALERT! A huge flare just erupted. Fast particles will reach Mars soon. Get ready to go to the shelter!",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  2,
+                       "hab":  "HAB: Alert! A huge flare just erupted on the Sun. Fast particles are on their way to Mars.",
+                       "card":  "flare_alert"
+                   },
+                   {
+                       "sol":  3,
+                       "hab":  "HAB: The storm is here. Radiation has doubled. Look up: an [[aurora]]!",
+                       "card":  "storm_here"
+                   },
+                   {
+                       "sol":  5,
+                       "hab":  "HAB: The storm is over. Radiation is back to normal. Well done, Astronaut!",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "flare_alert",
+                      "prompt":  "A solar flare just erupted. The particles will reach us soon. What now?",
+                      "icon":  "sun",
+                      "options":  [
+                                      {
+                                          "label":  "Procedure card: storm plan (finish work, get ready for the shelter)",
+                                          "icon":  "card",
+                                          "needsRadio":  false,
+                                          "hab":  "Plan started. Lab switched off, and you\u0027re ready to go to the shelter.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "science"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "One more trip outside for a rock sample",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "You got a sample, but that was risky with a storm on the way.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  6,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "samples":  1,
+                                                          "dose":  4
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Ask Earth what to do",
+                                          "icon":  "radio",
+                                          "needsRadio":  true,
+                                          "hab":  "Earth\u0027s answer arrived a sol later... and so did the storm. Next time, trust the procedure card!",
+                                          "cost":  {
+                                                       "power":  3,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "storm_here",
+                      "prompt":  "Radiation has doubled. Where do you wait out the storm?",
+                      "icon":  "shield",
+                      "options":  [
+                                      {
+                                          "label":  "Walk to the radiation shelter now",
+                                          "icon":  "shield",
+                                          "needsRadio":  false,
+                                          "hab":  "Go! Out through the airlock and follow the yellow sign. Stay inside and press N to wait.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  2,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Stay in the habitat and keep working",
+                                          "icon":  "home",
+                                          "needsRadio":  false,
+                                          "hab":  "The habitat walls are thin. You\u0027ll get more radiation here than in the shelter.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "dose":  10
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Finish the work outside first",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "That was a lot of radiation. In a real storm, astronauts go to shelter right away.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  6,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "dose":  25,
+                                                          "samples":  1
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "debrief":  {
+                    "realTeam":  "On September 10, 2017, the Sun released a huge flare. On the surface of Mars, the rover Curiosity measured radiation about double the normal level for about two days. The MAVEN spacecraft saw an aurora around the whole planet, more than 25 times brighter than usual. Scientists use storms like this to plan how future astronauts will stay safe.",
+                    "tryNext":  "Learn the way to the shelter on a quiet sol, then go as soon as the storm alert comes. Every sol you spend sheltered keeps your dose low.",
+                    "realScience":  {
+                                        "title":  "How to hide from radiation",
+                                        "text":  "Thick walls, soil and water all block radiation. Future Mars bases might pile Martian soil (regolith) on top of shelters, or put water tanks around the bedrooms, to keep astronauts safe during solar storms.",
+                                        "glossary":  "shielding"
+                                    },
+                    "sources":  [
+                                    "donki",
+                                    "msl_rad",
+                                    "nasa_images"
+                                ]
+                },
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "ice",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "status",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "clean",
+                                   "status"
+                               ]
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 }
+             ]
+}

@@ -1,0 +1,396 @@
+{
+    "id":  "ch3_stuck",
+    "mode":  "story",
+    "chapter":  3,
+    "title":  "Stuck",
+    "site":  "Meridiani Planum",
+    "goalText":  "Collect 12 rock samples and bring them home safely by sol 8.",
+    "intro":  [
+                  "HAB: Scientists on Earth want 12 rock samples from around the base. Look for the blue light beams outside.",
+                  "HAB: Going outside is an [[eva|EVA]]. It uses extra oxygen, so plan your trips.",
+                  "HAB: Our rover will help us explore. Watch out for [[softsand|soft sand]]!"
+              ],
+    "start":  {
+                  "power":  90,
+                  "oxygen":  85,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "science"
+                                ]
+              },
+    "goal":  {
+                 "type":  "collectSamples",
+                 "target":  12,
+                 "maxSols":  8
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Oxygen got low after long trips outside. HAB did a safe abort and brought you in."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.85,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0.9,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Rover in a soft sand ripple"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.85,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0.9,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Rover stuck"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.85,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0.6,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Rover inching out"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0.3,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Rover almost free"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Rover free"
+                                }
+                 },
+                 {
+                     "sol":  8,
+                     "sunlight":  0.9,
+                     "tau":  0.6,
+                     "radiation":  1,
+                     "cold":  0,
+                     "softSand":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  1,
+                       "hab":  "HAB: The airlock is at the end of the tunnel. Rock samples are marked with blue beams and small flags.",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  2,
+                       "mc":  "Great work out there! Remember: the Science lab can study each rock sample you bring in.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  3,
+                       "hab":  "HAB: Uh oh. The rover drove into a ripple of [[softsand|soft sand]]. Its wheels are digging in!",
+                       "card":  "rover_stuck"
+                   },
+                   {
+                       "sol":  4,
+                       "mc":  "Message from the rover team: back out slowly. Don\u0027t spin the wheels!",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  5,
+                       "hab":  "HAB: The lab can study the samples you bring back. Want to use it?",
+                       "card":  "lab"
+                   },
+                   {
+                       "sol":  7,
+                       "hab":  "HAB: The rover is free! Slow and careful wins.",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "rover_stuck",
+                      "prompt":  "The rover is stuck in soft sand. What do we do?",
+                      "icon":  "rover",
+                      "options":  [
+                                      {
+                                          "label":  "Drive out very slowly, a little each sol",
+                                          "icon":  "rover",
+                                          "needsRadio":  false,
+                                          "hab":  "Slow and steady. That is exactly how Opportunity escaped Purgatory Dune in 2005.",
+                                          "cost":  {
+                                                       "power":  6,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+                                                       "procedure",
+                                                       "priority"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Spin the wheels hard to get out fast",
+                                          "icon":  "rover",
+                                          "needsRadio":  false,
+                                          "hab":  "The wheels just dug in deeper! Spinning fast in soft sand makes things worse.",
+                                          "cost":  {
+                                                       "power":  15,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  1,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Leave the rover and walk to the samples",
+                                          "icon":  "suit",
+                                          "needsRadio":  false,
+                                          "hab":  "Good thinking: we can still do science on foot. Watch your oxygen.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  4,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "lab",
+                      "prompt":  "Use the Science lab to study your samples?",
+                      "icon":  "microscope",
+                      "options":  [
+                                      {
+                                          "label":  "Yes, turn on the Science lab",
+                                          "icon":  "microscope",
+                                          "needsRadio":  false,
+                                          "hab":  "The lab is running. Real rovers found tiny grey balls here called blueberries. They formed in water long ago!",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOn":  [
+                                                                         "science"
+                                                                     ]
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Not now, save power",
+                                          "icon":  "power",
+                                          "needsRadio":  false,
+                                          "hab":  "OK. Safety first. We can study them later.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "turnOff":  [
+                                                                          "science"
+                                                                      ]
+                                                      },
+                                          "tags":  [
+                                                       "priority"
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "debrief":  {
+                    "realTeam":  "In April 2005, Opportunity drove into a soft sand ripple later named Purgatory Dune and its wheels dug in. The team practiced on Earth with a copy of the rover, then drove it out a few centimeters at a time. It took about five weeks. In 2009 Spirit got stuck in soft soil at a place called Troy. The team tried for months, but Spirit never got out, so it became a science station that stayed in one place.",
+                    "tryNext":  "Collect samples early, while your oxygen is high, and never spin the wheels in soft sand.",
+                    "realScience":  {
+                                        "title":  "Why soft sand traps rovers",
+                                        "text":  "Loose, fluffy sand can\u0027t push back on the wheels. Instead of rolling forward, they spin and dig themselves deeper. That is why rover drivers back out slowly, a tiny bit at a time.",
+                                        "glossary":  "softsand"
+                                    },
+                    "sources":  [
+                                    "mer_history",
+                                    "nasa_images"
+                                ]
+                },
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "repair",
+                                   "clean",
+                                   "weather"
+                               ],
+                     "roverFault":  "A wheel is jammed with sand."
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "ice",
+                                   "clean",
+                                   "status"
+                               ]
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  8,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 }
+             ]
+}

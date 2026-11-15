@@ -1,0 +1,280 @@
+{
+    "id":  "ch6_luckywind",
+    "mode":  "story",
+    "chapter":  6,
+    "title":  "Lucky Wind",
+    "site":  "Meridiani Planum",
+    "goalText":  "Keep the base running for 7 sols while dust piles up on the solar panels.",
+    "intro":  [
+                  "HAB: The sky is dusty this week. Dust settles on our solar panels every sol, and dusty panels make less power.",
+                  "HAB: Clean the panels on an EVA when they get dusty. But remember: every second outside uses air!",
+                  "HAB: Real rovers had no one to clean their panels. Sometimes the wind did it for them!"
+              ],
+    "start":  {
+                  "power":  70,
+                  "oxygen":  80,
+                  "dose":  0,
+                  "shield":  0,
+                  "food":  6,
+                  "systemsOn":  [
+                                    "lifeSupport",
+                                    "heater",
+                                    "radio",
+                                    "greenhouse"
+                                ]
+              },
+    "goal":  {
+                 "type":  "surviveSols",
+                 "target":  7,
+                 "maxSols":  7
+             },
+    "abort":  [
+                  {
+                      "meter":  "power",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "The battery ran empty because the dusty panels made too little power. HAB did a safe abort."
+                  },
+                  {
+                      "meter":  "oxygen",
+                      "op":  "\u003c=",
+                      "value":  10,
+                      "message":  "Air got low after long trips outside. HAB did a safe abort and brought you in."
+                  },
+                  {
+                      "meter":  "food",
+                      "op":  "\u003c=",
+                      "value":  0,
+                      "message":  "Food ran out, so HAB called a safe abort."
+                  }
+              ],
+    "sols":  [
+                 {
+                     "sol":  1,
+                     "sunlight":  0.85,
+                     "tau":  1.2,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Hazy sky"
+                                }
+                 },
+                 {
+                     "sol":  2,
+                     "sunlight":  0.75,
+                     "tau":  2.0,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Dusty sky"
+                                }
+                 },
+                 {
+                     "sol":  3,
+                     "sunlight":  0.7,
+                     "tau":  2.4,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Dusty sky"
+                                }
+                 },
+                 {
+                     "sol":  4,
+                     "sunlight":  0.7,
+                     "tau":  2.5,
+                     "radiation":  1,
+                     "cold":  0.1,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Dust devils nearby"
+                                }
+                 },
+                 {
+                     "sol":  5,
+                     "sunlight":  0.8,
+                     "tau":  1.8,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Windy day"
+                                }
+                 },
+                 {
+                     "sol":  6,
+                     "sunlight":  0.9,
+                     "tau":  1.0,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clearing sky"
+                                }
+                 },
+                 {
+                     "sol":  7,
+                     "sunlight":  0.95,
+                     "tau":  0.7,
+                     "radiation":  1,
+                     "cold":  0,
+                     "source":  {
+                                    "kind":  "simulated",
+                                    "label":  "Clear day"
+                                }
+                 }
+             ],
+    "events":  [
+                   {
+                       "sol":  2,
+                       "mc":  "The dust is settling fast this week. Clean your panels when they get dusty, but keep your trips short.",
+                       "hab":  "",
+                       "card":  ""
+                   },
+                   {
+                       "sol":  4,
+                       "hab":  "HAB: Look outside! Dust devils are spinning across the plain. Tiny whirlwinds made of dust.",
+                       "card":  "dust_devil"
+                   },
+                   {
+                       "sol":  6,
+                       "hab":  "HAB: The sky is clearing. Our panels will love this sunshine!",
+                       "card":  ""
+                   }
+               ],
+    "cards":  [
+                  {
+                      "id":  "dust_devil",
+                      "prompt":  "A dust devil is spinning toward the solar panels! What do we do?",
+                      "icon":  "dust",
+                      "options":  [
+                                      {
+                                          "label":  "Stay inside and let the wind blow by",
+                                          "icon":  "home",
+                                          "hab":  "WOW! The whirlwind swept the dust right off the panels! That really happened to the rover Spirit in 2005.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  0,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+                                                          "panelDust":  -1
+                                                      },
+                                          "tags":  [
+                                                       "priority",
+                                                       "procedure"
+                                                   ]
+                                      },
+                                      {
+                                          "label":  "Run out and cover the panels",
+                                          "icon":  "suit",
+                                          "hab":  "You got sandblasted out there, and the cover kept the wind from cleaning them. Sometimes it\u0027s best to let nature help.",
+                                          "cost":  {
+                                                       "power":  0,
+                                                       "oxygen":  8,
+                                                       "food":  0,
+                                                       "sols":  0,
+                                                       "credits":  0
+                                                   },
+                                          "effects":  {
+
+                                                      },
+                                          "tags":  [
+
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ],
+    "days":  [
+                 {
+                     "sol":  1,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "weather",
+                                   "clean"
+                               ]
+                 },
+                 {
+                     "sol":  2,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  3,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:1",
+                                   "status",
+                                   "clean",
+                                   "repair",
+                                   "weather"
+                               ],
+                     "roverFault":  "Its solar panels are so dusty it shut down to save power."
+                 },
+                 {
+                     "sol":  4,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "clean",
+                                   "status",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  5,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 },
+                 {
+                     "sol":  6,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "ice",
+                                   "clean",
+                                   "status"
+                               ]
+                 },
+                 {
+                     "sol":  7,
+                     "tasks":  [
+                                   "forecast",
+                                   "samples:2",
+                                   "status",
+                                   "clean",
+                                   "weather"
+                               ]
+                 }
+             ],
+    "debrief":  {
+                    "realTeam":  "Spirit and Opportunity had no way to clean their solar panels. As dust piled up, their power slowly dropped. Then, in March 2005, gusts of wind blew most of the dust off Spirit\u0027s panels and its power jumped way up. The team was amazed! These wind \u0027cleaning events\u0027 helped both rovers keep working for years longer than planned.",
+                    "tryNext":  "Clean the panels when they pass about 40% dust, and make each trip outside short so you save air.",
+                    "realScience":  {
+                                        "title":  "Dust devils",
+                                        "text":  "A dust devil is a spinning column of warm air that lifts dust. On Mars they can be taller than a mountain. Orbiters have photographed their dark tracks crossing the ground.",
+                                        "glossary":  "tau"
+                                    },
+                    "sources":  [
+                                    "mer_history"
+                                ]
+                }
+}

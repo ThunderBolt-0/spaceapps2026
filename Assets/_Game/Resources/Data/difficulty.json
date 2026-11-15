@@ -1,0 +1,26 @@
+{
+  "balance": {
+    "solarPerSol": 35,
+    "oxygenMadePerSol": 8,
+    "oxygenUsedPerSol": 5,
+    "baseDosePerSol": 2,
+    "foodFromGreenhouse": 1,
+    "evaOxygenPerSol": 6,
+    "shelterShield": 0.8,
+    "sampleOxygenCost": 4,
+    "sampleDose": 1,
+    "cleanOxygenCost": 4
+  },
+  "systems": [
+    { "id": "lifeSupport", "label": "Life support", "icon": "lungs", "description": "Makes oxygen for you to breathe.", "powerPerSol": 12 },
+    { "id": "heater", "label": "Heater", "icon": "heater", "description": "Keeps the habitat warm so parts don't break.", "powerPerSol": 10 },
+    { "id": "radio", "label": "Radio", "icon": "radio", "description": "Lets you talk to Earth.", "powerPerSol": 4 },
+    { "id": "greenhouse", "label": "Greenhouse lights", "icon": "plant", "description": "Helps plants grow food.", "powerPerSol": 6 },
+    { "id": "science", "label": "Science lab", "icon": "microscope", "description": "Studies rocks and earns science points.", "powerPerSol": 6 }
+  ],
+  "levels": [
+    { "id": "cadet", "label": "Cadet", "startReserveBonus": 20, "drainMultiplier": 0.8, "hintsOn": true, "timerSeconds": 0 },
+    { "id": "pilot", "label": "Pilot", "startReserveBonus": 0, "drainMultiplier": 1.0, "hintsOn": false, "timerSeconds": 0 },
+    { "id": "commander", "label": "Commander", "startReserveBonus": -10, "drainMultiplier": 1.2, "hintsOn": false, "timerSeconds": 20 }
+  ]
+}
