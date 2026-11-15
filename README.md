@@ -3,7 +3,7 @@
 **A Junior Astronaut Mission Trainer for kids aged 7–12, built for the NASA Space Apps Challenge 2026.**
 Challenge: *Build a Junior Astronaut Mission Trainer.*
 
-▶ **Play in your browser:** https://spaceapps2026.pages.dev (no download, no account; works best with a keyboard and mouse)
+▶ **Play in your browser:** https://theredfrontier.pages.dev (no download, no account; works best with a keyboard and mouse)
 
 ---
 
@@ -99,6 +99,7 @@ Optional: put your own free NASA API key (from https://api.nasa.gov) in `Assets/
 The repo already contains the built game in `web/`, so Cloudflare doesn't need to build anything:
 
 - **Workers & Pages → Create → Pages → Connect to Git →** this repository
+- **Project name:** `theredfrontier` (this gives the address theredfrontier.pages.dev)
 - **Framework preset:** None · **Build command:** *(leave empty)* · **Build output directory:** `web`
 
 Every push to `main` redeploys. Cloudflare Pages allows at most 25 MiB per file; the build script warns if a file is bigger.
